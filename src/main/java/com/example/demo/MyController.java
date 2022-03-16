@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -21,8 +22,8 @@ public class MyController {
   @Autowired
   private RestTemplate restTemplate;
 
-  @GetMapping("/")
-  public String get(@RequestParam String word, Model model) {
+  @GetMapping("/{word}")
+  public String get(@PathVariable String word, Model model) {
     ResponseEntity<String> response = restTemplate.getForEntity(String.format(URL, word, KEY), String.class);
     String json = response.getBody();
     Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);

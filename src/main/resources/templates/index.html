@@ -5,8 +5,11 @@
 
 </head>
 <body>
-<tr th:each="definition: ${definitions}">
-    <td th:text="${definition}" /></br>
-</tr>
+<div style="font-size:120%;">
+    <tr th:each="definition: ${definitions}">
+        <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
+        </br></br>
+    </tr>
+</div>
 </body>
 </html>
