@@ -19,4 +19,8 @@ public class HealthController {
     return "App is up " + url;
   }
 
+  @GetMapping("favicon.ico")
+  void returnNoFavicon() {
+  }
+
 }
