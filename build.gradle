@@ -23,3 +23,11 @@ test {
 	useJUnitPlatform()
 }
 
+task stage(dependsOn: ['build', 'clean']) {
+	System.out.println("Assalam o Alaikum");
+	println System.getenv()
+	System.out.println("Assalam o Alaikum");
+	println System.properties
+}
+build.mustRunAfter clean
+
