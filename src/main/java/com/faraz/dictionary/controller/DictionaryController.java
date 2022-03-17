@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.faraz.dictionary.controller;
 
+import com.faraz.dictionary.repository.DictionaryRepository;
+import com.faraz.dictionary.entity.Dictionary;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.faraz.dictionary.controller;
 
 import com.github.wnameless.json.flattener.JsonFlattener;
 import org.springframework.beans.factory.annotation.Value;

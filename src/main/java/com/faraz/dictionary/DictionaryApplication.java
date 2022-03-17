@@ -1,9 +1,8 @@
-package com.example.demo;
+package com.faraz.dictionary;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
@@ -14,11 +13,10 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class DemoApplication implements CommandLineRunner {
+public class DictionaryApplication implements CommandLineRunner {
 
   public static void main(String[] args) {
-    ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
-    if (false) SpringApplication.exit(context, () -> 1);
+    SpringApplication.run(DictionaryApplication.class, args);
   }
 
   @Override

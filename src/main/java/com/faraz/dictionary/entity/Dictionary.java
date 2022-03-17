@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.faraz.dictionary.entity;
 
 import org.springframework.data.annotation.Id;
 
