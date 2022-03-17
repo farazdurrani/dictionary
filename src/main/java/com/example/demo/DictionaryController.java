@@ -15,18 +15,21 @@ import java.util.Map;
 public class DictionaryController {
 
   private final RestTemplate restTemplate;
+  private final DictionaryRepository dictionaryRepository;
   private final String key;
   private final String url;
 
-  public DictionaryController(RestTemplate restTemplate, @Value("${key}") String key,
-                              @Value("${url}") String url) {
+  public DictionaryController(RestTemplate restTemplate, DictionaryRepository dictionaryRepository, @Value("${dictionary.key}") String key,
+                              @Value("${dictionary.url}") String url) {
     this.restTemplate = restTemplate;
+    this.dictionaryRepository = dictionaryRepository;
     this.key = key;
     this.url = url;
   }
 
   @GetMapping("/{word}")
   public String get(@PathVariable String word, Model model) {
+    this.dictionaryRepository.save(new Dictionary(word));
     ResponseEntity<String> response = restTemplate.getForEntity(String.format(url, word, key), String.class);
     String json = response.getBody();
     Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);

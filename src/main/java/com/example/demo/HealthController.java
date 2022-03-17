@@ -9,7 +9,7 @@ public class HealthController {
 
   private final String url;
 
-  public HealthController(@Value("${url}") String url) {
+  public HealthController(@Value("${dictionaryurl}") String url) {
     this.url = url;
   }
 

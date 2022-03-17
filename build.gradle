@@ -16,7 +16,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'com.github.wnameless.json', name: 'json-flattener', version: '0.13.0'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 test {
@@ -24,10 +24,7 @@ test {
 }
 
 task stage(dependsOn: ['build', 'clean']) {
-	System.out.println("Assalam o Alaikum");
-	println System.getenv()
-	System.out.println("Assalam o Alaikum");
-	println System.properties
+
 }
 build.mustRunAfter clean
 
