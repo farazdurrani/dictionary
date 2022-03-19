@@ -2,8 +2,6 @@ package com.faraz.dictionary.entity;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
-
 
 public class Dictionary {
 
@@ -11,13 +9,11 @@ public class Dictionary {
   private String id;
 
   private String word;
-  private List<String> meaning;
 
   public Dictionary() {}
 
-  public Dictionary(String word, List<String> meaning) {
+  public Dictionary(String word) {
     this.word = word;
-    this.meaning = meaning;
   }
 
   public String getId() {
@@ -36,12 +32,4 @@ public class Dictionary {
     this.word = word;
   }
 
-
-  public List<String> getMeaning() {
-    return meaning;
-  }
-
-  public void setMeaning(List<String> meaning) {
-    this.meaning = meaning;
-  }
 }
