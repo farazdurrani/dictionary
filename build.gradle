@@ -14,9 +14,10 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'com.github.wnameless.json', name: 'json-flattener', version: '0.13.0'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+	implementation 'com.github.wnameless.json:json-flattener:0.13.0'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'com.mailjet:mailjet-client:4.2.0'
 }
 
 test {
