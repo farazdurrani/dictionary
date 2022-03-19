@@ -30,6 +30,9 @@ public class HealthController {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
+  //todo work on health
+  //check status after making calls to dictionaries and thats enough
+  //append thefreedictionary check and result
   @GetMapping({"/", "/health"})
   public String health() {
     ResponseEntity<String> response = restTemplate.getForEntity(
@@ -43,6 +46,7 @@ public class HealthController {
     mongoTemplate.getCollection("dictionary").countDocuments();
     //above line didn't throw error so mongo is up.
     health.append("Mongo is up.");
+
 
     return health.toString();
   }
