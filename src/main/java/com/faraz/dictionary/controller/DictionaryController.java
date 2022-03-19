@@ -11,24 +11,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class DictionaryController {
 
   private final RestTemplate restTemplate;
   private final DictionaryRepository dictionaryRepository;
-  private final String key;
-  private final String url;
+  private final String merriamWebsterKey;
+  private final String merriamWebsterUrl;
+  private final String freeDictionaryEndpoint;
 
-  public DictionaryController(RestTemplate restTemplate, DictionaryRepository dictionaryRepository, @Value("${dictionary.key}") String key, @Value("${dictionary.url}") String url) {
+  public DictionaryController(RestTemplate restTemplate, DictionaryRepository dictionaryRepository,
+                              @Value("${dictionary.merriamWebster.key}") String merriamWebsterKey,
+                              @Value("${dictionary.merriamWebster.url}") String merriamWebsterUrl,
+                              @Value("${dictionary.freeDictionary.url}") String freeDictionaryEndpoint) {
     this.restTemplate = restTemplate;
     this.dictionaryRepository = dictionaryRepository;
-    this.key = key;
-    this.url = url;
+    this.merriamWebsterKey = merriamWebsterKey;
+    this.merriamWebsterUrl = merriamWebsterUrl;
+    this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
   @GetMapping("/{word}")
@@ -38,14 +40,14 @@ public class DictionaryController {
       model.addAttribute("definitions", meaning.get().getMeaning());
       return "index";
     }
-    ResponseEntity<String> response = restTemplate.getForEntity(String.format(url, word, key), String.class);
+    ResponseEntity<String> response = restTemplate.getForEntity(String.format(merriamWebsterUrl, word, merriamWebsterKey), String.class);
     String json = response.getBody();
     Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);
-    Map<String, Object> orig = new HashMap<>(flattenJson);
+    List<Object> orig = new ArrayList<>(flattenJson.values());
     flattenJson.keySet().removeIf(x -> !x.contains("shortdef"));
     if (flattenJson.values().isEmpty()) {
       model.addAttribute("message", "No definition found for " + word + ". Perhaps, you meant:");
-      model.addAttribute("definitions", orig.values());
+      model.addAttribute("definitions", orig);
       return "index";
     }
     this.dictionaryRepository.save(new Dictionary(word, new ArrayList(flattenJson.values())));

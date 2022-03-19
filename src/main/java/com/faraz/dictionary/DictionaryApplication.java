@@ -35,8 +35,6 @@ public class DictionaryApplication implements CommandLineRunner {
     DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
     MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
     converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-
     return converter;
   }
-
 }
