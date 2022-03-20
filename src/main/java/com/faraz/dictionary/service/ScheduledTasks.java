@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.HTML;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -32,6 +31,7 @@ public class ScheduledTasks {
   }
 
   @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
+//  @Scheduled(fixedRate = 60000)
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
@@ -52,8 +52,8 @@ public class ScheduledTasks {
     List<String> definitions = null;
     if (!words.isEmpty()) {
       definitions = words.stream().map(Dictionary::getWord).map(
-          word -> dictionaryService.getDefinitions(word, false)).flatMap(List::stream).collect(
-          Collectors.toList());
+          word -> dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
+              Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
     } else {
       definitions = Arrays.asList("No words lookup in the past " + time);
     }
