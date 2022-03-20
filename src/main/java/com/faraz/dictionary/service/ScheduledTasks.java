@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.HTML;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -30,7 +31,8 @@ public class ScheduledTasks {
     this.dictionaryService = dictionaryService;
   }
 
-  @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
+  //  @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
+  @Scheduled(fixedRate = 60000)
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
@@ -38,6 +40,8 @@ public class ScheduledTasks {
     sendEmail(words, "24 hours");
   }
 
+  //faraz todo
+  //need spacing between words
   @Scheduled(cron = "0 0 1 * * SUN", zone = "America/Chicago")
   public void everyWeekTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
@@ -56,8 +60,8 @@ public class ScheduledTasks {
     } else {
       definitions = Arrays.asList("No words lookup in the past " + time);
     }
-    emailService.sendEmail("Words lookup in the past " + time,
-        String.join(System.lineSeparator(), definitions));
+    String body = String.join("<br>", definitions);
+    emailService.sendEmail("Words lookup in the past " + time, body);
   }
 
   public List<Dictionary> wordsFromLast(Instant now, Instant prev) {

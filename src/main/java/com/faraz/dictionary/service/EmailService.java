@@ -39,7 +39,5 @@ public class EmailService {
                     "Personal Dictionary"))).put(Emailv31.Message.SUBJECT, subject).put(
             Emailv31.Message.HTMLPART, body)));
     MailjetResponse response = client.post(request);
-    System.out.println(response.getStatus());
-    System.out.println(response.getData());
   }
 }
