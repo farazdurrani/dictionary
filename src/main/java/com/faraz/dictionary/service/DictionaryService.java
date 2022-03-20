@@ -36,8 +36,14 @@ public class DictionaryService {
     List<String> freeDictionaryDefinitions = freeDictionaryDefinitions(word);
     save(freeDictionaryDefinitions, word, save);
     definitions.addAll(freeDictionaryDefinitions);
-    definitions.add(0, "Definition of " + word);
+    addHeaderAndFooter(definitions, word);
     return definitions;
+  }
+
+  private void addHeaderAndFooter(List<String> definitions, String word) {
+    definitions.add(0, "Definition of " + word.toUpperCase());
+    definitions.add(System.lineSeparator());
+    definitions.add(System.lineSeparator());
   }
 
   private void save(List<String> definitions, String word, boolean save) {

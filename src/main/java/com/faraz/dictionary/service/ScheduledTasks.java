@@ -31,8 +31,7 @@ public class ScheduledTasks {
     this.dictionaryService = dictionaryService;
   }
 
-  //  @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
-  @Scheduled(fixedRate = 60000)
+  @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
@@ -40,8 +39,6 @@ public class ScheduledTasks {
     sendEmail(words, "24 hours");
   }
 
-  //faraz todo
-  //need spacing between words
   @Scheduled(cron = "0 0 1 * * SUN", zone = "America/Chicago")
   public void everyWeekTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
