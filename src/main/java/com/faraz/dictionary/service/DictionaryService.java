@@ -30,18 +30,18 @@ public class DictionaryService {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
-  public Collection<?> getDefinitions(String word) {
-
+  public List<String> getDefinitions(String word, boolean save) {
     List<String> definitions = merriamWebsterDefinitions(word);
-    save(definitions, word);
+    save(definitions, word, save);
     List<String> freeDictionaryDefinitions = freeDictionaryDefinitions(word);
-    save(freeDictionaryDefinitions, word);
+    save(freeDictionaryDefinitions, word, save);
     definitions.addAll(freeDictionaryDefinitions);
+    definitions.add(0, "Definition of " + word);
     return definitions;
   }
 
-  private void save(List<String> definitions, String word) {
-    if (!definitions.get(0).contains("No definitions found for ")) {
+  private void save(List<String> definitions, String word, boolean save) {
+    if (!definitions.get(0).contains("No definitions found for ") && save) {
       Optional<Dictionary> exists = this.dictionaryRepository.findByWord(word);
       if (exists.isPresent()) {
         this.dictionaryRepository.delete(exists.get());
@@ -57,7 +57,7 @@ public class DictionaryService {
     List<Object> orig = new ArrayList<>(flattenJson.values());
     flattenJson.keySet().removeIf(x -> !x.contains("shortdef"));
     if (flattenJson.values().isEmpty()) {
-      orig.set(0, "No definitions found for " + word + ". Perhaps, you meant:");
+      orig.add(0, "No definitions found for " + word + ". Perhaps, you meant:");
       return orig.stream().map(String.class::cast).collect(Collectors.toList());
     }
     return flattenJson.values().stream().map(String.class::cast).collect(Collectors.toList());

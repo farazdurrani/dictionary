@@ -25,7 +25,7 @@ public class DictionaryController {
 
   @GetMapping("/{word}")
   public String get(@PathVariable String word, Model model) {
-    model.addAttribute("definitions", dictionaryService.getDefinitions(word));
+    model.addAttribute("definitions", dictionaryService.getDefinitions(word, true));
     return "index";
   }
 }
