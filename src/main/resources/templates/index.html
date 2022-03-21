@@ -15,7 +15,7 @@
 <body>
 <div style="font-size:3vw;">
     <form action="#" method="post" th:action="@{/}" th:object="${word}">
-        <p><input th:field="*{word}" type="text" id="inputbox"/></p>
+        <p><input th:field="*{word}" type="text" id="inputbox" autofocus/></p>
     </form>
     <p th:text="${message}"/>
     <tr th:each="definition: ${definitions}">
