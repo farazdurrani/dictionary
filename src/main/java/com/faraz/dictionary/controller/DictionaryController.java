@@ -29,10 +29,4 @@ public class DictionaryController {
     model.addAttribute("definitions", dictionaryService.getDefinitions(word.getWord(), true));
     return "index";
   }
-
-//  @GetMapping("/{word}")
-//  public String get(@PathVariable String word, Model model) {
-//    model.addAttribute("definitions", dictionaryService.getDefinitions(word, true));
-//    return "index";
-//  }
 }
