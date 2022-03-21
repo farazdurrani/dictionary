@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -48,11 +51,8 @@ public class DictionaryService {
 
   private void save(List<String> definitions, String word, boolean save) {
     if (!definitions.get(0).contains("No definitions found for ") && save) {
-      Optional<Dictionary> exists = this.dictionaryRepository.findByWord(word);
-      if (exists.isPresent()) {
-        this.dictionaryRepository.delete(exists.get());
-      }
-      this.dictionaryRepository.save(new Dictionary(word, new Date()));
+      this.dictionaryRepository.deleteByWord(word);
+      this.dictionaryRepository.save(new Dictionary(word, new Date()));//put the new date
     }
   }
 

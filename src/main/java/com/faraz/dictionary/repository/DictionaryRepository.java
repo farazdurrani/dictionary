@@ -9,4 +9,6 @@ public interface DictionaryRepository extends MongoRepository<Dictionary, String
 
   Optional<Dictionary> findByWord(String word);
 
+  Optional<Dictionary> deleteByWord(String word);
+
 }

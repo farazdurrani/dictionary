@@ -1,0 +1,7 @@
+
+  //todo work on health
+  //check status after making calls to dictionaries and thats enough
+  //append thefreedictionary check and result
+  //send meanings and synyms as models to front-end
+  //mark word as @Id and see if it works. It would save 1 database call
+  //put a box in the html page so you won't

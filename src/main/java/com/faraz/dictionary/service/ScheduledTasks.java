@@ -31,7 +31,6 @@ public class ScheduledTasks {
   }
 
   @Scheduled(cron = "0 0 1 * * *", zone = "America/Chicago")
-//  @Scheduled(fixedRate = 60000)
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);

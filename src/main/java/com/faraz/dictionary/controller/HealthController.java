@@ -37,10 +37,6 @@ public class HealthController {
     this.emailService = emailService;
   }
 
-  //todo work on health
-  //check status after making calls to dictionaries and thats enough
-  //append thefreedictionary check and result
-  //send meanings and synyms as models to front-end
   @GetMapping({"/", "/health"})
   public String health() throws MailjetSocketTimeoutException, MailjetException {
     ResponseEntity<String> response = restTemplate.getForEntity(
