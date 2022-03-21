@@ -1,0 +1,2012 @@
+[
+  {
+    "meta": {
+      "id": "work:1",
+      "uuid": "3ab734ee-9ace-4efb-bd4e-5a529402c459",
+      "sort": "230221100",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work",
+        "work on",
+        "work upon",
+        "worked",
+        "worked on",
+        "worked upon",
+        "working",
+        "working on",
+        "working upon",
+        "works",
+        "works on",
+        "works upon",
+        "wrought"
+      ],
+      "offensive": false
+    },
+    "hom": 1,
+    "hwi": {
+      "hw": "work",
+      "prs": [
+        {
+          "mw": "\u02c8w\u0259rk",
+          "sound": {
+            "audio": "work0001",
+            "ref": "c",
+            "stat": "1"
+          }
+        }
+      ]
+    },
+    "fl": "verb",
+    "ins": [
+      {
+        "if": "worked",
+        "prs": [
+          {
+            "mw": "\u02c8w\u0259rkt",
+            "sound": {
+              "audio": "worked01",
+              "ref": "c",
+              "stat": "1"
+            }
+          }
+        ]
+      },
+      {
+        "il": "or",
+        "if": "wrought",
+        "prs": [
+          {
+            "mw": "\u02c8r\u022ft",
+            "sound": {
+              "audio": "wrough01",
+              "ref": "c",
+              "stat": "1"
+            }
+          }
+        ]
+      },
+      {
+        "if": "work*ing"
+      }
+    ],
+    "def": [
+      {
+        "vd": "intransitive verb",
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "sn": "1 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to perform work or fulfill duties regularly for wages or salary "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}works{\/wi} in publishing"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to perform or carry through a task requiring sustained effort or continuous repeated operations "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} all day over a hot stove"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "c",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to exert oneself physically or mentally especially in sustained effort for a purpose or under compulsion or necessity"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to function or operate according to plan or design "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "hinges {wi}work{\/wi} better with oil"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "3",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to produce a desired effect or result {bc}{sx|succeed||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "a plan that will {wi}work{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "4",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to exert an influence or tendency"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "5 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to make way slowly and with difficulty {bc}move or progress laboriously "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} up to the presidency"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to sail to windward"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "6 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to move slightly in relation to another part"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to get into a specified condition by slow or imperceptible movements "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "the knot {wi}worked{\/wi} loose"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "c",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to be in agitation or restless motion"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "d",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}{sx|ferment||1}"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "7",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to permit of being {a_link|worked} {bc}react in a specified way to being worked "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "this wood {wi}works{\/wi} easily"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "vd": "transitive verb",
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "sn": "1",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to set or keep in motion, operation, or activity {bc}cause to operate or produce "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "a pump {wi}worked{\/wi} by hand"
+                      },
+                      {
+                        "t": "{wi}work{\/wi} farmland"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to bring to pass {bc}{sx|effect||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}work{\/wi} miracles"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "3",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to solve (a problem) by reasoning or calculation "
+                  ],
+                  [
+                    "uns",
+                    [
+                      [
+                        [
+                          "text",
+                          "often used with {it}out{\/it}"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "4 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to cause to toil or labor "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} their horses nearly to death"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to make use of {bc}{sx|exploit||}"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "c",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to control or guide the operation of "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "switches are {wi}worked{\/wi} from a central tower"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "5 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to carry on an operation or perform a job through, at, in, or along "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "the peddler {wi}worked{\/wi} the corner"
+                      },
+                      {
+                        "t": "a sportscaster hired to {wi}work{\/wi} the game"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to greet and talk with in a friendly way in order to ingratiate oneself or achieve a purpose "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "politicians {wi}working{\/wi} the crowd"
+                      },
+                      {
+                        "t": "{wi}worked{\/wi} the room"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "6",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to pay for or achieve with labor or service "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} my way through college"
+                      },
+                      {
+                        "t": "{wi}worked{\/wi} my way up in the company"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "7 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to prepare for use by stirring or kneading"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to bring into a desired form by a gradual process of cutting, hammering, scraping, pressing, or stretching "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}work{\/wi} cold steel"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "8 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to fashion or create a useful or desired product by expending labor or exertion on {bc}{sx|forge||}, {sx|shape||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}work{\/wi} flint into tools"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to make or decorate with needlework"
+                  ]
+                ],
+                "sdsense": {
+                  "sd": "especially",
+                  "dt": [
+                    [
+                      "text",
+                      "{bc}{sx|embroider||}"
+                    ]
+                  ]
+                }
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "9 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to get (oneself or an object) into or out of a condition or position by gradual stages"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}{sx|contrive||}, {sx|arrange||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "we can {wi}work{\/wi} it so that you can take your vacation"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "10 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}{sx|excite||}, {sx|provoke||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} myself into a rage"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to practice trickery or cajolery on for some end "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}worked{\/wi} the management for a free ticket"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "dros": [
+      {
+        "drp": "work on",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "1",
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}{sx|affect||} "
+                      ],
+                      [
+                        "vis",
+                        [
+                          {
+                            "t": "{it}worked on{\/it} my sympathies"
+                          }
+                        ]
+                      ]
+                    ]
+                  }
+                ]
+              ],
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "2",
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}to strive to influence or persuade"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "drp": "work upon",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}to have effect upon {bc}operate on"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "et": [
+      [
+        "text",
+        "Middle English {it}werken, worken{\/it}, from Old English {it}wyrcan{\/it}; akin to Old English {it}weorc{\/it}"
+      ]
+    ],
+    "date": "before 12th century{ds|t|2||}",
+    "shortdef": [
+      "to perform work or fulfill duties regularly for wages or salary",
+      "to perform or carry through a task requiring sustained effort or continuous repeated operations",
+      "to exert oneself physically or mentally especially in sustained effort for a purpose or under compulsion or necessity"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work:2",
+      "uuid": "57562c39-bed8-4e43-8957-f1de4e729d5a",
+      "sort": "230221200",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "at work",
+        "in the works",
+        "in work",
+        "out of work",
+        "work",
+        "works"
+      ],
+      "offensive": false
+    },
+    "hom": 2,
+    "hwi": {
+      "hw": "work"
+    },
+    "fl": "noun",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "bs",
+              {
+                "sense": {
+                  "sn": "1",
+                  "dt": [
+                    [
+                      "text",
+                      "{bc}activity in which one exerts strength or faculties to do or perform something:"
+                    ]
+                  ]
+                }
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}activity that a person engages in regularly to earn a livelihood "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "people looking for {wi}work{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a specific task, duty, function, or assignment often being a part or phase of some larger activity"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "c",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}sustained physical or mental effort to overcome obstacles and achieve an objective or result"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}one\u0027s place of employment "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "didn\u0027t go to {wi}work{\/wi} today"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "3 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}something produced or accomplished by effort, exertion, or exercise of skill "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "this book is the {wi}work{\/wi} of many hands"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}something produced by the exercise of creative talent or expenditure of creative effort {bc}artistic production "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "an early {wi}work{\/wi} by a major writer"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "4 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}something that results from a particular manner or method of {a_link|working}, operating, or devising "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "careful police {wi}work{\/wi}"
+                      },
+                      {
+                        "t": "clever camera {wi}work{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}something that results from the use or fashioning of a particular material "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "porcelain {wi}work{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "5 a",
+                "ins": [
+                  {
+                    "if": "works",
+                    "spl": "plural"
+                  }
+                ],
+                "dt": [
+                  [
+                    "text",
+                    "{bc}structures in engineering (such as docks, bridges, or embankments) or mining (such as shafts or tunnels)"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a fortified structure (such as a fort, earthen barricade, or trench)"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "6",
+                "ins": [
+                  {
+                    "if": "works",
+                    "spl": "plural in form but singular or plural in construction"
+                  }
+                ],
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a place where industrial labor is carried on {bc}{sx|plant||}, {sx|factory||}"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "7",
+                "ins": [
+                  {
+                    "if": "works",
+                    "spl": "plural"
+                  }
+                ],
+                "dt": [
+                  [
+                    "text",
+                    "{bc}the working or moving parts of a mechanism "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "the {wi}works{\/wi} of a clock"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sen",
+              {
+                "sn": "8",
+                "ins": [
+                  {
+                    "if": "works",
+                    "spl": "plural"
+                  }
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}everything possessed, available, or belonging "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "the whole {wi}works{\/wi}, rod, reel, tackle box, went overboard"
+                      },
+                      {
+                        "t": "ordered pizza with the {wi}works{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}subjection to drastic treatment {bc}all possible abuse "
+                  ],
+                  [
+                    "uns",
+                    [
+                      [
+                        [
+                          "text",
+                          "usually used with {it}get{\/it} or {it}give{\/it} "
+                        ],
+                        [
+                          "vis",
+                          [
+                            {
+                              "t": "get the {wi}works{\/wi}"
+                            },
+                            {
+                              "t": "gave them the {wi}works{\/wi}"
+                            }
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "9 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}the transference of energy that is produced by the motion of the point of application of a force and is measured by multiplying the force and the displacement of its point of application in the line of action"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}energy expended by natural phenomena"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "c",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}the result of such energy "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "sand dunes are the {wi}work{\/wi} of sea and wind"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "10 a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}effective operation {bc}{sx|effect||}, {sx|result||} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "wait for time to do its healing {wi}work{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}manner of working {bc}{sx|workmanship||}, {sx|execution||}"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "11",
+                "ins": [
+                  {
+                    "if": "works",
+                    "spl": "plural"
+                  }
+                ],
+                "dt": [
+                  [
+                    "text",
+                    "{bc}performance of moral or religious acts "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "salvation by {wi}works{\/wi}"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "12",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}the material or piece of material that is operated upon at any stage in the process of manufacture"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "dros": [
+      {
+        "drp": "at work",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "1",
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}engaged in working {bc}{sx|busy||}"
+                      ]
+                    ],
+                    "sdsense": {
+                      "sd": "especially",
+                      "dt": [
+                        [
+                          "text",
+                          "{bc}engaged in one\u0027s regular occupation"
+                        ]
+                      ]
+                    }
+                  }
+                ]
+              ],
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "2",
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}having effect {bc}{sx|operating||}, {sx|functioning||}"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "drp": "in the works",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}in process of preparation, development, or completion"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "drp": "in work",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "1",
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}in process of being done"
+                      ]
+                    ]
+                  }
+                ]
+              ],
+              [
+                [
+                  "sense",
+                  {
+                    "sn": "2",
+                    "sls": [
+                      "of a horse"
+                    ],
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}in training"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "drp": "out of work",
+        "def": [
+          {
+            "sseq": [
+              [
+                [
+                  "sense",
+                  {
+                    "dt": [
+                      [
+                        "text",
+                        "{bc}without regular employment {bc}{sx|jobless||}"
+                      ]
+                    ]
+                  }
+                ]
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "syns": [
+      {
+        "pl": "synonyms",
+        "pt": [
+          [
+            "text",
+            "{sc}work{\/sc} {sc}labor{\/sc} {sc}travail{\/sc} {sc}toil{\/sc} {sc}drudgery{\/sc} {sc}grind{\/sc} mean activity involving effort or exertion. {sc}work{\/sc} may imply activity of body, of mind, of a machine, or of a natural force. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "too tired to do any {it}work{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}labor{\/sc} applies to physical or intellectual work involving great and often strenuous exertion. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "farmers demanding fair compensation for their {it}labor{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}travail{\/sc} is bookish for labor involving pain or suffering. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "years of {it}travail{\/it} were lost when the house burned"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}toil{\/sc} implies prolonged and fatiguing labor. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "his lot would be years of back-breaking {it}toil{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}drudgery{\/sc} suggests dull and irksome labor. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "an editorial job with a good deal of {it}drudgery{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}grind{\/sc} implies labor exhausting to mind or body. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "the {it}grind{\/it} of the assembly line"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "pl": "synonyms",
+        "pt": [
+          [
+            "text",
+            "{sc}work{\/sc} {sc}employment{\/sc} {sc}occupation{\/sc} {sc}calling{\/sc} {sc}pursuit{\/sc} {sc}m\u00e9tier{\/sc} {sc}business{\/sc} mean a specific sustained activity engaged in especially in earning one\u0027s living. {sc}work{\/sc} may apply to any purposeful activity whether remunerative or not. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "her {it}work{\/it} as a hospital volunteer"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}employment{\/sc} implies work for which one has been engaged and is being paid by an employer. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "your {it}employment{\/it} with this firm is hereby terminated"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}occupation{\/sc} implies work in which one engages regularly especially as a result of training. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "his {it}occupation{\/it} as a trained auto mechanic"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}calling{\/sc} applies to an occupation viewed as a vocation or profession. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "the ministry seemed my true {it}calling{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}pursuit{\/sc} suggests a trade, profession, or avocation followed with zeal or steady interest. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "her family considered medicine the only proper {it}pursuit{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}m\u00e9tier{\/sc} implies a calling or pursuit for which one believes oneself to be especially fitted. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "acting was my one and only {it}m\u00e9tier{\/it}"
+              }
+            ]
+          ],
+          [
+            "text",
+            " {sc}business{\/sc} suggests activity in commerce or the management of money and affairs. "
+          ],
+          [
+            "vis",
+            [
+              {
+                "t": "the {it}business{\/it} of managing a hotel"
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "et": [
+      [
+        "text",
+        "Middle English {it}werk, work{\/it}, from Old English {it}werc, weorc{\/it}; akin to Old High German {it}werc{\/it} work, Greek {it}ergon{\/it}, Avestan {it}var\u0259zem{\/it} activity"
+      ]
+    ],
+    "date": "before 12th century{ds||1||}",
+    "shortdef": [
+      "activity in which one exerts strength or faculties to do or perform something:",
+      "activity that a person engages in regularly to earn a livelihood",
+      "a specific task, duty, function, or assignment often being a part or phase of some larger activity"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work:3",
+      "uuid": "80d75d8d-d71e-4441-8c5e-16c505a8827f",
+      "sort": "230221300",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work"
+      ],
+      "offensive": false
+    },
+    "hom": 3,
+    "hwi": {
+      "hw": "work"
+    },
+    "fl": "adjective",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "sn": "1",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}suitable or styled for wear while {a_link|working} "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{wi}work{\/wi} clothes"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}used for work "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "a {wi}work{\/wi} elephant"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "3",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}involving or engaged in work "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "a {wi}work{\/wi} crew"
+                      },
+                      {
+                        "t": "{wi}work{\/wi} hours"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "14th century{ds||2||}",
+    "shortdef": [
+      "suitable or styled for wear while working",
+      "used for work",
+      "involving or engaged in work"
+    ]
+  },
+  {
+    "meta": {
+      "id": "wrought:1",
+      "uuid": "d22f5a74-7906-4ea6-ad1a-2580f6af44ad",
+      "sort": "230249200",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work",
+        "wrought"
+      ],
+      "offensive": false
+    },
+    "hom": 1,
+    "hwi": {
+      "hw": "wrought",
+      "prs": [
+        {
+          "mw": "\u02c8r\u022ft",
+          "sound": {
+            "audio": "wrough02",
+            "ref": "c",
+            "stat": "1"
+          }
+        }
+      ]
+    },
+    "cxs": [
+      {
+        "cxl": "past tense and past participle of",
+        "cxtis": [
+          {
+            "cxt": "work"
+          }
+        ]
+      }
+    ],
+    "shortdef": []
+  },
+  {
+    "meta": {
+      "id": "work-around",
+      "uuid": "3e2f3cae-9542-4a0d-93a6-bab32f22d2df",
+      "sort": "230221700",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work-around",
+        "work-arounds"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work-around",
+      "prs": [
+        {
+          "mw": "\u02c8w\u0259rk-\u0259-\u02ccrau\u0307nd",
+          "sound": {
+            "audio": "worka01v",
+            "ref": "c",
+            "stat": "1"
+          }
+        }
+      ]
+    },
+    "fl": "noun",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a plan or method to circumvent a problem (as in computer software) without eliminating it"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "1961",
+    "shortdef": [
+      "a plan or method to circumvent a problem (as in computer software) without eliminating it"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work camp",
+      "uuid": "32b06f53-0607-4ac9-ba8e-d169a8ae278a",
+      "sort": "230222400",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work camp",
+        "work camps"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work camp"
+    },
+    "fl": "noun",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "bs",
+              {
+                "sense": {
+                  "dt": [
+                    [
+                      "text",
+                      "{bc}a camp for workers: such as"
+                    ]
+                  ]
+                }
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "a",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}{sx|prison camp||1}"
+                  ]
+                ]
+              }
+            ],
+            [
+              "sense",
+              {
+                "sn": "b",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a short-term group project in which individuals from one or more religious organizations volunteer their labor"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "1877",
+    "shortdef": [
+      "a camp for workers: such as",
+      "prison camp",
+      "a short-term group project in which individuals from one or more religious organizations volunteer their labor"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work ethic",
+      "uuid": "42754259-6553-480f-8164-6eca24e2227e",
+      "sort": "230223100",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work ethic",
+        "work ethics"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work ethic"
+    },
+    "fl": "noun",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a belief in work as a moral good {bc}a set of values centered on the importance of doing work and reflected especially in a desire or determination to work hard"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "1945",
+    "shortdef": [
+      "a belief in work as a moral good : a set of values centered on the importance of doing work and reflected especially in a desire or determination to work hard"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work farm",
+      "uuid": "dd85d7df-27e8-4576-8da1-94934b147543",
+      "sort": "230223300",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work farm",
+        "work farms"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work farm"
+    },
+    "fl": "noun",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a farm on which persons guilty of minor law violations are confined"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "1835",
+    "shortdef": [
+      "a farm on which persons guilty of minor law violations are confined"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work in",
+      "uuid": "8b5b10ea-da62-4359-a114-2f84235248a7",
+      "sort": "230223800",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work in",
+        "worked in",
+        "working in",
+        "works in"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work in"
+    },
+    "fl": "verb",
+    "ins": [
+      {
+        "if": "worked in"
+      },
+      {
+        "if": "working in"
+      },
+      {
+        "if": "works in"
+      }
+    ],
+    "def": [
+      {
+        "vd": "transitive verb",
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "sn": "1",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to insert or cause to penetrate by repeated or continued effort"
+                  ]
+                ]
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}to interpose or insinuate gradually or unobtrusively "
+                  ],
+                  [
+                    "vis",
+                    [
+                      {
+                        "t": "{it}worked in{\/it} a few topical jokes"
+                      }
+                    ]
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "15th century{ds||1||}",
+    "shortdef": [
+      "to insert or cause to penetrate by repeated or continued effort",
+      "to interpose or insinuate gradually or unobtrusively"
+    ]
+  },
+  {
+    "meta": {
+      "id": "work of art",
+      "uuid": "6c737a70-8d4a-444c-bd01-c933ce0d5129",
+      "sort": "230226000",
+      "src": "collegiate",
+      "section": "alpha",
+      "stems": [
+        "work of art"
+      ],
+      "offensive": false
+    },
+    "hwi": {
+      "hw": "work of art"
+    },
+    "fl": "noun phrase",
+    "def": [
+      {
+        "sseq": [
+          [
+            [
+              "sense",
+              {
+                "sn": "1",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}a product of one of the fine arts"
+                  ]
+                ],
+                "sdsense": {
+                  "sd": "especially",
+                  "dt": [
+                    [
+                      "text",
+                      "{bc}a painting or sculpture of high artistic quality"
+                    ]
+                  ]
+                }
+              }
+            ]
+          ],
+          [
+            [
+              "sense",
+              {
+                "sn": "2",
+                "dt": [
+                  [
+                    "text",
+                    "{bc}something giving high aesthetic satisfaction to the viewer or listener"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ]
+      }
+    ],
+    "date": "1585{ds||1||}",
+    "shortdef": [
+      "a product of one of the fine arts; especially : a painting or sculpture of high artistic quality",
+      "something giving high aesthetic satisfaction to the viewer or listener"
+    ]
+  }
+]

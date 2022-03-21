@@ -6,6 +6,9 @@
 </head>
 <body>
 <div style="font-size:3vw;">
+    <form action="#" method="post" th:action="@{/}" th:object="${word}">
+        <p><input th:field="*{word}" type="text"/><input type="submit" value="Submit"/></p>
+    </form>
     <p th:text="${message}"/>
     <tr th:each="definition: ${definitions}">
         <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
