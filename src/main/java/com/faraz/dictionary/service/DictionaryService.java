@@ -3,14 +3,12 @@ package com.faraz.dictionary.service;
 import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.repository.DictionaryRepository;
 import com.github.wnameless.json.flattener.JsonFlattener;
+import com.github.wnameless.json.flattener.JsonifyArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -66,7 +64,8 @@ public class DictionaryService {
       orig.add(0, "No definitions found for " + word + ". Perhaps, you meant:");
       return orig.stream().map(String.class::cast).collect(Collectors.toList());
     }
-    return flattenJson.values().stream().map(String.class::cast).collect(Collectors.toList());
+    return flattenJson.values().stream().filter(String.class::isInstance).map(String.class::cast).collect(
+        Collectors.toList());
   }
 
   private List<String> freeDictionaryDefinitions(String word) {

@@ -2,6 +2,8 @@ package com.faraz.dictionary.controller;
 
 import com.faraz.dictionary.service.EmailService;
 import com.github.wnameless.json.flattener.JsonFlattener;
+import com.mailjet.client.errors.MailjetException;
+import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
-
-import com.mailjet.client.errors.MailjetException;
-import com.mailjet.client.errors.MailjetSocketTimeoutException;
 
 @RestController
 public class HealthController {
@@ -37,7 +36,7 @@ public class HealthController {
     this.emailService = emailService;
   }
 
-  @GetMapping({"/", "/health"})
+  @GetMapping("/health")
   public String health() throws MailjetSocketTimeoutException, MailjetException {
     ResponseEntity<String> response = restTemplate.getForEntity(
         String.format(merriamWebsterUrl, "word", merriamWebsterKey), String.class);

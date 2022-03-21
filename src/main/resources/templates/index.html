@@ -2,10 +2,21 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-
+    <script>
+    document.getElementById('inputbox')
+      .addEventListener('keyup', function(event) {
+        if (event.code === 'Enter') {
+          event.preventDefault();
+          document.querySelector('form').submit();
+        }
+      });
+    </script>
 </head>
 <body>
 <div style="font-size:3vw;">
+    <form action="#" method="post" th:action="@{/}" th:object="${word}">
+        <p><input th:field="*{word}" type="text" id="inputbox" autofocus/></p>
+    </form>
     <p th:text="${message}"/>
     <tr th:each="definition: ${definitions}">
         <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
