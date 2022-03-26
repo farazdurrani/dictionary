@@ -57,6 +57,7 @@ public class ScheduledTasks {
       definitions = Arrays.asList("No words lookup in the past " + time);
     }
     String body = String.join("<br>", definitions);
+    body = "<div style=\"font-size:25px\">" + body + "</div>";
     emailService.sendEmail("Words lookup in the past " + time, body);
   }
 
