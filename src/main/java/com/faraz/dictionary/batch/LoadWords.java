@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Profile("batch")
-public class BatchProcessor {
+public class LoadWords {
 
   @Autowired
   private MongoTemplate mongoTemplate;
