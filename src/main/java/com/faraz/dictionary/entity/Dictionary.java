@@ -2,8 +2,6 @@ package com.faraz.dictionary.entity;
 
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 
 
@@ -22,20 +20,7 @@ public class Dictionary {
     this.lookupTime = lookupTime;
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getWord() {
-    return word;
+    return this.word;
   }
-
-  public void setWord(String word) {
-    this.word = word;
-  }
-
 }
