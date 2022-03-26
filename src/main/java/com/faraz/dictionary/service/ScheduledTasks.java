@@ -55,6 +55,18 @@ public class ScheduledTasks {
     logger.info("Finished 7-day task");
   }
 
+  //  @Scheduled(cron = "0 0 3 * * SUN", zone = "America/Chicago")
+//  @Scheduled(fixedRate = 60000000L)
+  public void sendRandomWords() throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Started 7-day task");
+    Query query = new Query();
+    query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(20);
+    List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
+    List<String> definitions = getDefinitions(words, "7 days");
+    sendEmail(definitions, "7 days");
+    logger.info("Finished 7-day task");
+  }
+
   private List<String> getDefinitions(List<Dictionary> words, String time) {
     List<String> definitions = null;
     if (!words.isEmpty()) {
