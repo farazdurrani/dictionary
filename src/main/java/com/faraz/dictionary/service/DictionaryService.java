@@ -48,7 +48,7 @@ public class DictionaryService {
   }
 
   private void save(List<String> definitions, String word, boolean save) {
-    if (!definitions.get(0).contains("No definitions found for ") && save) {
+    if (!definitions.isEmpty() && !definitions.get(0).contains("No definitions found for ") && save) {
       this.dictionaryRepository.deleteByWord(word);
       this.dictionaryRepository.save(new Dictionary(word, new Date()));//put the new date
     }
