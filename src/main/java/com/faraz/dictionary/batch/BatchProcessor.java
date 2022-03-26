@@ -29,7 +29,7 @@ public class BatchProcessor {
   public void uploadWord() throws IOException {
     Set<String> lines = new HashSet<>(Files.readAllLines(Paths.get("words")));
     Date date = Date.from(Instant.now().minus(30, ChronoUnit.DAYS));
-    List<Dictionary> dictionaryList = lines.stream().map(line -> new Dictionary(line, date)).collect(
+    List<Dictionary> dictionaryList = lines.stream().map(line -> new Dictionary(line, date, false)).collect(
         Collectors.toList());
     mongoTemplate.insert(dictionaryList, Dictionary.class);
   }

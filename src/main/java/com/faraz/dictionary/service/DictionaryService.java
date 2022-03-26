@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -49,8 +50,13 @@ public class DictionaryService {
 
   private void save(List<String> definitions, String word, boolean save) {
     if (!definitions.isEmpty() && !definitions.get(0).contains("No definitions found for ") && save) {
-      this.dictionaryRepository.deleteByWord(word);
-      this.dictionaryRepository.save(new Dictionary(word, new Date()));//put the new date
+      Dictionary _word = new Dictionary(word, new Date(), false);
+      Optional<Dictionary> saved = this.dictionaryRepository.findByWord(word);
+      if (saved.isPresent()) {
+        _word = saved.get();
+        _word.setLookupTime(new Date());
+      }
+      this.dictionaryRepository.save(_word);
     }
   }
 
