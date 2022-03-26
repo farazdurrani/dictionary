@@ -39,7 +39,8 @@ public class ScheduledTasks {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
     List<Dictionary> words = wordsFromLast(now, prev);
-    sendEmail(words, "24 hours");
+    List<String> definitions = getDefinitions(words, "24 hours");
+    sendEmail(definitions, "24 hours");
     logger.info("Finished 24 hour task");
   }
 
@@ -49,19 +50,24 @@ public class ScheduledTasks {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.WEEKS);
     List<Dictionary> words = wordsFromLast(now, prev);
-    sendEmail(words, "7 days");
+    List<String> definitions = getDefinitions(words, "7 days");
+    sendEmail(definitions, "7 days");
     logger.info("Finished 7-day task");
   }
 
-  private void sendEmail(List<Dictionary> words,
-                         String time) throws MailjetSocketTimeoutException, MailjetException {
+  private List<String> getDefinitions(List<Dictionary> words, String time) {
     List<String> definitions = null;
     if (!words.isEmpty()) {
-      definitions = words.stream().map(Dictionary::getWord).map(this::getDefinitions).flatMap(
+      definitions = words.stream().map(Dictionary::getWord).map(this::massageDefinition).flatMap(
           List::stream).collect(Collectors.toList());
     } else {
       definitions = Arrays.asList("No words lookup in the past " + time);
     }
+    return definitions;
+  }
+
+  private void sendEmail(List<String> definitions,
+                         String time) throws MailjetSocketTimeoutException, MailjetException {
     String body = String.join("<br>", definitions);
     body = "<div style=\"font-size:20px\">" + body + "</div>";
     emailService.sendEmail("Words lookup in the past " + time, body);
@@ -70,9 +76,13 @@ public class ScheduledTasks {
   /**
    * Add a space at the end
    */
-  private List<String> getDefinitions(String word) {
+  private List<String> massageDefinition(String word) {
     List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
         Collectors.toList());
+    for (int i = 0; i < meanings.size(); i++) {
+      if (i == 0) continue;
+      meanings.set(i, "- ".concat(meanings.get(i)));
+    }
     meanings.add(System.lineSeparator());
     return meanings;
   }
