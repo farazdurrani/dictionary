@@ -3,12 +3,14 @@ package com.faraz.dictionary.service;
 import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.repository.DictionaryRepository;
 import com.github.wnameless.json.flattener.JsonFlattener;
-import com.github.wnameless.json.flattener.JsonifyArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -43,8 +45,6 @@ public class DictionaryService {
 
   private void addHeaderAndFooter(List<String> definitions, String word) {
     definitions.add(0, "Definition of " + word.toUpperCase());
-    definitions.add(System.lineSeparator());
-    definitions.add(System.lineSeparator());
   }
 
   private void save(List<String> definitions, String word, boolean save) {
