@@ -1,6 +1,7 @@
 package com.faraz.dictionary.service;
 
 import com.faraz.dictionary.entity.Dictionary;
+import com.faraz.dictionary.repository.DictionaryRepository;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import org.slf4j.Logger;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +25,14 @@ public class ScheduledTasks {
   private final MongoTemplate mongoTemplate;
   private final EmailService emailService;
   private final DictionaryService dictionaryService;
+  private final DictionaryRepository dictionaryRepository;
 
   public ScheduledTasks(MongoTemplate mongoTemplate, EmailService emailService,
-                        DictionaryService dictionaryService) {
+                        DictionaryService dictionaryService, DictionaryRepository dictionaryRepository) {
     this.mongoTemplate = mongoTemplate;
     this.emailService = emailService;
     this.dictionaryService = dictionaryService;
+    this.dictionaryRepository = dictionaryRepository;
   }
 
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
@@ -39,50 +41,50 @@ public class ScheduledTasks {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
     List<Dictionary> words = wordsFromLast(now, prev);
-    List<String> definitions = getDefinitions(words, "24 hours");
-    sendEmail(definitions, "24 hours");
+    List<String> definitions = getDefinitions(words);
+    String subject = "Words lookup in the past 24 hours";
+    sendEmail(definitions, subject);
     logger.info("Finished 24 hour task");
   }
 
   @Scheduled(cron = "0 0 3 * * SUN", zone = "America/Chicago")
-  public void everyWeekTask() throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started 7-day task");
-    Instant now = Instant.now();
-    Instant prev = now.minus(1, ChronoUnit.WEEKS);
-    List<Dictionary> words = wordsFromLast(now, prev);
-    List<String> definitions = getDefinitions(words, "7 days");
-    sendEmail(definitions, "7 days");
-    logger.info("Finished 7-day task");
-  }
-
-  //  @Scheduled(cron = "0 0 3 * * SUN", zone = "America/Chicago")
-//  @Scheduled(fixedRate = 60000000L)
-  public void sendRandomWords() throws MailjetSocketTimeoutException, MailjetException {
+  public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 7-day task");
     Query query = new Query();
     query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(20);
     List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
-    List<String> definitions = getDefinitions(words, "7 days");
-    sendEmail(definitions, "7 days");
+    if (words.isEmpty()) {
+      words = setReminded().stream().limit(20).collect(Collectors.toList());
+    }
+    List<String> definitions = getDefinitions(words);
+    sendEmail(definitions, "Random definitions of the week!");
+    words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
+    dictionaryRepository.saveAll(words);
     logger.info("Finished 7-day task");
   }
 
-  private List<String> getDefinitions(List<Dictionary> words, String time) {
-    List<String> definitions = null;
-    if (!words.isEmpty()) {
-      definitions = words.stream().map(Dictionary::getWord).map(this::massageDefinition).flatMap(
-          List::stream).collect(Collectors.toList());
-    } else {
-      definitions = Arrays.asList("No words lookup in the past " + time);
-    }
-    return definitions;
+  private List<Dictionary> setReminded() {
+    List<Dictionary> allWords = mongoTemplate.findAll(Dictionary.class).stream().map(
+        w -> setReminded(w, false)).collect(Collectors.toList());
+    dictionaryRepository.saveAll(allWords);
+    return allWords;
+  }
+
+  private Dictionary setReminded(Dictionary dictionary, boolean reminded) {
+    dictionary.setReminded(reminded);
+    return dictionary;
+  }
+
+  private List<String> getDefinitions(List<Dictionary> words) {
+    return words.stream().map(Dictionary::getWord).map(this::massageDefinition).flatMap(List::stream).collect(
+        Collectors.toList());
   }
 
   private void sendEmail(List<String> definitions,
-                         String time) throws MailjetSocketTimeoutException, MailjetException {
+                         String subject) throws MailjetSocketTimeoutException, MailjetException {
     String body = String.join("<br>", definitions);
     body = "<div style=\"font-size:20px\">" + body + "</div>";
-    emailService.sendEmail("Words lookup in the past " + time, body);
+    emailService.sendEmail(subject, body);
   }
 
   /**

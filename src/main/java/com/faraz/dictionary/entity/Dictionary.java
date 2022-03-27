@@ -29,4 +29,8 @@ public class Dictionary {
   public void setLookupTime(Date lookupTime) {
     this.lookupTime = lookupTime;
   }
+
+  public void setReminded(boolean reminded) {
+    this.reminded = reminded;
+  }
 }
