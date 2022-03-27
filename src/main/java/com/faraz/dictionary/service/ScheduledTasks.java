@@ -47,7 +47,7 @@ public class ScheduledTasks {
     logger.info("Finished 24 hour task");
   }
 
-  @Scheduled(cron = "0 0 3 * * SUN", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 4 * * SUN", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 7-day task");
     Query query = new Query();
@@ -61,6 +61,16 @@ public class ScheduledTasks {
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
     logger.info("Finished 7-day task");
+  }
+
+  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
+  public void backup() throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Backup started");
+    List<String> definitions = dictionaryRepository.findAll().stream().map(Dictionary::getWord).collect(
+        Collectors.toList());
+    String subject = "Words Backup";
+    sendEmail(definitions, subject);
+    logger.info("Backup ended");
   }
 
   private List<Dictionary> setReminded() {
