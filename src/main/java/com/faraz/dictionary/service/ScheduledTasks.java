@@ -44,14 +44,22 @@ public class ScheduledTasks {
     List<String> definitions = getDefinitions(words);
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
+    int minimumWords = 21;
+    if (definitions.size() < minimumWords) {
+      sendRandomDefinitions(minimumWords - definitions.size());
+    }
     logger.info("Finished 24 hour task");
   }
 
   @Scheduled(cron = "0 0 4 * * SUN", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started 7-day task");
+    sendRandomDefinitions(20);
+  }
+
+  private List<String> sendRandomDefinitions(
+      int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Started random definitions");
     Query query = new Query();
-    int wordLimit = 20;
     query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(wordLimit);
     List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
     if (words.isEmpty()) {
@@ -61,7 +69,8 @@ public class ScheduledTasks {
     sendEmail(definitions, "Random definitions of the week!");
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
-    logger.info("Finished 7-day task");
+    logger.info("Finished sending random definitions");
+    return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
   }
 
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
