@@ -51,10 +51,11 @@ public class ScheduledTasks {
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 7-day task");
     Query query = new Query();
-    query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(20);
+    int wordLimit = 20;
+    query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(wordLimit);
     List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
     if (words.isEmpty()) {
-      words = setReminded().stream().limit(20).collect(Collectors.toList());
+      words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
     List<String> definitions = getDefinitions(words);
     sendEmail(definitions, "Random definitions of the week!");
@@ -98,9 +99,6 @@ public class ScheduledTasks {
     emailService.sendEmail(subject, body);
   }
 
-  /**
-   * Add a space at the end
-   */
   private List<String> massageDefinition(String word) {
     List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
         Collectors.toList());
