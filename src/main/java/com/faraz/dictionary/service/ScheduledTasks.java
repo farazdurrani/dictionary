@@ -68,6 +68,7 @@ public class ScheduledTasks {
     logger.info("Backup started");
     List<String> definitions = dictionaryRepository.findAll().stream().map(Dictionary::getWord).collect(
         Collectors.toList());
+    definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
     sendEmail(definitions, subject);
     logger.info("Backup ended");
