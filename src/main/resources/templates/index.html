@@ -28,6 +28,7 @@
         <div class="word"><input autocomplete="off" autofocus id="inputbox" th:field="*{word}" type="text"/>
         </div>
     </form>
+    </br>
     <div th:if="${prevWord}">
         <div>Definition of <a target="_blank"
                               th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
