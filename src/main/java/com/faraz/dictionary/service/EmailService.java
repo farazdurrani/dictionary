@@ -29,7 +29,7 @@ public class EmailService {
     this.to = to;
   }
 
-  public void sendEmail(String subject, String body) throws MailjetSocketTimeoutException, MailjetException {
+  public int sendEmail(String subject, String body) throws MailjetSocketTimeoutException, MailjetException {
     MailjetClient client = new MailjetClient(mailjetApiKey, mailjetApiSecret, new ClientOptions("v3.1"));
     MailjetRequest request = new MailjetRequest(Emailv31.resource).property(Emailv31.MESSAGES,
         new JSONArray().put(new JSONObject().put(Emailv31.Message.FROM,
@@ -39,5 +39,6 @@ public class EmailService {
                     "Personal Dictionary"))).put(Emailv31.Message.SUBJECT, subject).put(
             Emailv31.Message.HTMLPART, body)));
     MailjetResponse response = client.post(request);
+    return response.getStatus();
   }
 }

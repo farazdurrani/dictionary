@@ -1,17 +1,15 @@
 package com.faraz.dictionary.controller;
 
 import com.faraz.dictionary.service.EmailService;
-import com.github.wnameless.json.flattener.JsonFlattener;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @RestController
 public class HealthController {
@@ -38,18 +36,62 @@ public class HealthController {
 
   @GetMapping("/health")
   public String health() throws MailjetSocketTimeoutException, MailjetException {
-    ResponseEntity<String> response = restTemplate.getForEntity(
-        String.format(merriamWebsterUrl, "word", merriamWebsterKey), String.class);
-    String json = response.getBody();
-    Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);
     StringBuilder health = new StringBuilder();
-    if (!flattenJson.isEmpty()) {
-      health.append("Merriam Webster Dictionary is up. ").append(System.lineSeparator());
-    }
-    mongoTemplate.getCollection("dictionary").countDocuments();
-    //above line didn't throw error so mongo is up.
-    health.append("Mongo is up.");
+    String htmlLineSeparator = "<br>";
+    health.append(merriamWebsterHealth()).append(htmlLineSeparator);
+    health.append(freeDictionaryHealth()).append(htmlLineSeparator);
+    health.append(mongoHealth()).append(htmlLineSeparator);
+    health.append(emailHealth()).append(htmlLineSeparator);
     return health.toString();
+  }
+
+  private String emailHealth() throws MailjetSocketTimeoutException, MailjetException {
+    try {
+      int statusCode = emailService.sendEmail("ping", "pong");
+      if (statusCode == 200) {
+        return "Email service is up. ";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return "Email service is down";
+  }
+
+  private String mongoHealth() {
+    try {
+      mongoTemplate.getCollection("dictionary").countDocuments();
+      //above line didn't throw error so mongo is up.
+      return "Mongo is up.";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return "Mongo is down.";
+  }
+
+  private String freeDictionaryHealth() {
+    try {
+      ResponseEntity<String> response = restTemplate.getForEntity(
+          String.format(freeDictionaryEndpoint, "word"), String.class);
+      if (response.getStatusCode() == HttpStatus.OK) {
+        return "Free Dictionary is up. ";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return "Free Dictionary is down";
+  }
+
+  private String merriamWebsterHealth() {
+    try {
+      ResponseEntity<String> response = restTemplate.getForEntity(
+          String.format(merriamWebsterUrl, "word", merriamWebsterKey), String.class);
+      if (response.getStatusCode() == HttpStatus.OK) {
+        return "Merriam Webster Dictionary is up. ";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return "Merriam Webster Dictionary is down";
   }
 
   @GetMapping("favicon.ico")
