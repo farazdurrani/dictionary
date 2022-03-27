@@ -2,22 +2,25 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script>
+<script>
     document.getElementById('inputbox')
-      .addEventListener('keyup', function(event) {
-        if (event.code === 'Enter') {
-          event.preventDefault();
-          document.querySelector('form').submit();
-        }
-      });
-    </script>
-    <style>
-        .word input {
-        width: calc(100% - 160px);
-        line-height: 2;
-        font-size: 46px;
-        }
-    </style>
+    .addEventListener('keyup', function(event) {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      document.querySelector('form').submit();
+    }
+    });
+</script>
+<style>
+    .word input {
+    width: calc(100% - 160px);
+    line-height: 2;
+    font-size: 46px;
+    }
+    a {
+    text-decoration:none;
+    }
+</style>
 </head>
 <body>
 <div style="font-size:3vw;">
@@ -25,7 +28,14 @@
         <div class="word"><input autocomplete="off" autofocus id="inputbox" th:field="*{word}" type="text"/>
         </div>
     </form>
-    <p th:text="${message}"/>
+    <div th:if="${prevWord}">
+        <div>Definition of <a target="_blank"
+                              th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
+                              th:text="${#strings.capitalize(prevWord)}">
+        </a>
+        </div>
+    </div>
+    </br>
     <tr th:each="definition: ${definitions}">
         <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
         </br></br>

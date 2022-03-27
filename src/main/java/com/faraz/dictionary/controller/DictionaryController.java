@@ -26,6 +26,7 @@ public class DictionaryController {
   @PostMapping("/")
   public String greetingSubmit(@ModelAttribute Word word, Model model) {
     model.addAttribute("word", new Word());
+    model.addAttribute("prevWord", word.getWord());
     model.addAttribute("definitions", dictionaryService.getDefinitions(word.getWord(), true));
     return "index";
   }

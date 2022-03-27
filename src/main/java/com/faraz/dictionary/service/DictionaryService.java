@@ -37,15 +37,7 @@ public class DictionaryService {
   public List<String> getDefinitions(String word, boolean save) {
     List<String> definitions = merriamWebsterDefinitions(word);
     save(definitions, word, save);
-    List<String> freeDictionaryDefinitions = freeDictionaryDefinitions(word);
-    save(freeDictionaryDefinitions, word, save);
-    definitions.addAll(freeDictionaryDefinitions);
-    addHeaderAndFooter(definitions, word);
     return definitions;
-  }
-
-  private void addHeaderAndFooter(List<String> definitions, String word) {
-    definitions.add(0, "Definition of " + word.toUpperCase());
   }
 
   private void save(List<String> definitions, String word, boolean save) {
@@ -74,6 +66,7 @@ public class DictionaryService {
         Collectors.toList());
   }
 
+  @Deprecated
   private List<String> freeDictionaryDefinitions(String word) {
     String json = null;
     try {

@@ -112,7 +112,10 @@ public class ScheduledTasks {
     List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
-      if (i == 0) continue;
+      if (i == 0) {
+        meanings.add(i, "definition of " + word.toUpperCase());
+        continue;
+      }
       meanings.set(i, "- ".concat(meanings.get(i)));
     }
     meanings.add(System.lineSeparator());
