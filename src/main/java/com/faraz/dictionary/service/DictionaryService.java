@@ -64,7 +64,8 @@ public class DictionaryService {
     flattenJson.keySet().removeIf(x -> !x.contains("shortdef"));
     if (flattenJson.values().isEmpty()) {
       orig.add(0, NO_DEFINITION_FOUND + word + ". Perhaps, you meant:");
-      return orig.stream().map(String.class::cast).collect(Collectors.toList());
+      return orig.stream().filter(String.class::isInstance).map(String.class::cast).collect(
+          Collectors.toList());
     }
     return flattenJson.values().stream().filter(String.class::isInstance).map(String.class::cast).collect(
         Collectors.toList());
