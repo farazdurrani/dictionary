@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,7 @@ public class ScheduledTasks {
     logger.info("Started 24 hour task");
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
-    List<Dictionary> words = wordsFromLast(now, prev);
+    Collection<Dictionary> words = wordsFromLast(now, prev);
     List<String> definitions = getDefinitions(words);
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
@@ -96,7 +98,7 @@ public class ScheduledTasks {
     return dictionary;
   }
 
-  private List<String> getDefinitions(List<Dictionary> words) {
+  private List<String> getDefinitions(Collection<Dictionary> words) {
     return words.stream().map(Dictionary::getWord).map(this::massageDefinition).flatMap(List::stream).collect(
         Collectors.toList());
   }
@@ -122,11 +124,11 @@ public class ScheduledTasks {
     return meanings;
   }
 
-  public List<Dictionary> wordsFromLast(Instant now, Instant prev) {
+  public LinkedHashSet<Dictionary> wordsFromLast(Instant now, Instant prev) {
     Date startDate = Date.from(now);
     Date endDate = Date.from(prev);
     Query query = new Query();
     query.addCriteria(Criteria.where("lookupTime").gte(endDate).lt(startDate));
-    return mongoTemplate.find(query, Dictionary.class);
+    return new LinkedHashSet<>(mongoTemplate.find(query, Dictionary.class));
   }
 }
