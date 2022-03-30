@@ -38,23 +38,6 @@ public class ScheduledTasks {
     this.dictionaryRepository = dictionaryRepository;
   }
 
-  @Scheduled(fixedRate = 600000000L)
-  public void delete() throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started 24 hour task");
-    Instant now = Instant.now();
-    Instant prev = now.minus(1, ChronoUnit.DAYS);
-    Collection<Dictionary> words = wordsFromLast(now, prev).stream().limit(2).collect(
-        Collectors.toList());
-    List<String> definitions = getDefinitions(words);
-    String subject = "Words lookup in the past 24 hours";
-    sendEmail(definitions, subject);
-    if (words.size() < MINIMUM_WORDS) {
-      System.out.println();
-//      sendRandomDefinitions(MINIMUM_WORDS - definitions.size());
-    }
-    logger.info("Finished 24 hour task");
-  }
-
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
@@ -145,10 +128,7 @@ public class ScheduledTasks {
   }
 
   private String anchor(String word) {
-    String a =
-        "<a href=\'https://www.google.com/search?q=define: " + word.toLowerCase() + "\' target=\'_blank\'>" + word.toUpperCase() +
-            "</a>";
-    return word;
+    return "<a href='https://www.google.com/search?q=define: " + word.toLowerCase() + "' target='_blank'>" + word.toUpperCase() + "</a>";
   }
 
   /**
