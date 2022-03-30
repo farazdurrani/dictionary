@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -25,6 +24,7 @@ import java.util.stream.Collectors;
 public class ScheduledTasks {
 
   private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
+  private static final int MINIMUM_WORDS = 50;
   private final MongoTemplate mongoTemplate;
   private final EmailService emailService;
   private final DictionaryService dictionaryService;
@@ -38,6 +38,23 @@ public class ScheduledTasks {
     this.dictionaryRepository = dictionaryRepository;
   }
 
+  @Scheduled(fixedRate = 600000000L)
+  public void delete() throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Started 24 hour task");
+    Instant now = Instant.now();
+    Instant prev = now.minus(1, ChronoUnit.DAYS);
+    Collection<Dictionary> words = wordsFromLast(now, prev).stream().limit(2).collect(
+        Collectors.toList());
+    List<String> definitions = getDefinitions(words);
+    String subject = "Words lookup in the past 24 hours";
+    sendEmail(definitions, subject);
+    if (words.size() < MINIMUM_WORDS) {
+      System.out.println();
+//      sendRandomDefinitions(MINIMUM_WORDS - definitions.size());
+    }
+    logger.info("Finished 24 hour task");
+  }
+
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
@@ -47,16 +64,15 @@ public class ScheduledTasks {
     List<String> definitions = getDefinitions(words);
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
-    int minimumWords = 21;
-    if (definitions.size() < minimumWords) {
-      sendRandomDefinitions(minimumWords - definitions.size());
+    if (words.size() < MINIMUM_WORDS) {
+      sendRandomDefinitions(MINIMUM_WORDS - definitions.size());
     }
     logger.info("Finished 24 hour task");
   }
 
   @Scheduled(cron = "0 0 4 * * SUN", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    sendRandomDefinitions(20);
+    sendRandomDefinitions(MINIMUM_WORDS);
   }
 
   private List<String> sendRandomDefinitions(
@@ -79,8 +95,8 @@ public class ScheduledTasks {
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll().stream().map(Dictionary::getWord).collect(
-        Collectors.toList());
+    List<String> definitions = dictionaryRepository.findAll().stream().map(
+        Dictionary::getWord).distinct().collect(Collectors.toList());
     definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
     sendEmail(definitions, subject);
@@ -101,7 +117,7 @@ public class ScheduledTasks {
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
-    return words.stream().map(Dictionary::getWord).map(
+    return words.stream().map(Dictionary::getWord).distinct().map(
         word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
@@ -110,7 +126,8 @@ public class ScheduledTasks {
                          String subject) throws MailjetSocketTimeoutException, MailjetException {
     String body = String.join("<br>", definitions);
     body = "<div style=\"font-size:20px\">" + body + "</div>";
-    emailService.sendEmail(subject, body);
+    int status = emailService.sendEmail(subject, body);
+    logger.info("Sent definitions with status " + status);
   }
 
   private List<String> massageDefinition(String word, int counter) {
@@ -118,7 +135,7 @@ public class ScheduledTasks {
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {
-        meanings.add(i, counter + "- Definition of " + word.toUpperCase());
+        meanings.add(i, counter + "- Definition of " + anchor(word));
         continue;
       }
       meanings.set(i, "- ".concat(meanings.get(i)));
@@ -127,11 +144,21 @@ public class ScheduledTasks {
     return meanings;
   }
 
-  public LinkedHashSet<Dictionary> wordsFromLast(Instant now, Instant prev) {
+  private String anchor(String word) {
+    String a =
+        "<a href=\'https://www.google.com/search?q=define: " + word.toLowerCase() + "\' target=\'_blank\'>" + word.toUpperCase() +
+            "</a>";
+    return word;
+  }
+
+  /**
+   * Db call
+   */
+  public List<Dictionary> wordsFromLast(Instant now, Instant prev) {
     Date startDate = Date.from(now);
     Date endDate = Date.from(prev);
     Query query = new Query();
     query.addCriteria(Criteria.where("lookupTime").gte(endDate).lt(startDate));
-    return new LinkedHashSet<>(mongoTemplate.find(query, Dictionary.class));
+    return mongoTemplate.find(query, Dictionary.class);
   }
 }
