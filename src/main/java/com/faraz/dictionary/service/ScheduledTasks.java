@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,8 @@ public class ScheduledTasks {
     this.dictionaryRepository = dictionaryRepository;
   }
 
-  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
+  //  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
+  @Scheduled(fixedRate = 6000000000L)
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
     Instant now = Instant.now();
@@ -99,7 +101,9 @@ public class ScheduledTasks {
   }
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
-    return words.stream().map(Dictionary::getWord).map(this::massageDefinition).flatMap(List::stream).collect(
+    AtomicInteger count = new AtomicInteger(1);
+    return words.stream().map(Dictionary::getWord).map(
+        word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
 
@@ -110,12 +114,12 @@ public class ScheduledTasks {
     emailService.sendEmail(subject, body);
   }
 
-  private List<String> massageDefinition(String word) {
+  private List<String> massageDefinition(String word, int counter) {
     List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {
-        meanings.add(i, "definition of " + word.toUpperCase());
+        meanings.add(i, counter + "- Definition of " + word.toUpperCase());
         continue;
       }
       meanings.set(i, "- ".concat(meanings.get(i)));
