@@ -3,8 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 <script>
-    document.getElementById('inputbox')
-    .addEventListener('keyup', function(event) {
+    document.getElementById('inputbox').addEventListener('keyup', function(event) {
     if (event.code === 'Enter') {
       event.preventDefault();
       document.querySelector('form').submit();
@@ -13,7 +12,7 @@
 </script>
 <style>
     .word input {
-    width: calc(100% - 7px);
+    width: calc(100% - 10px);
     line-height: 2;
     font-size: 46px;
     }
@@ -30,7 +29,7 @@
     </form>
     </br>
     <div th:if="${prevWord}">
-        <div>Definition of <a target="_blank"
+        <div>Definition of <a target="_blank" referrerpolicy="no-referrer" rel="noreferrer"
                               th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
                               th:text="${#strings.capitalize(prevWord)}">
         </a>
