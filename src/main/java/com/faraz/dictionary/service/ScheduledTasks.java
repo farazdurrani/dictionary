@@ -38,8 +38,7 @@ public class ScheduledTasks {
     this.dictionaryRepository = dictionaryRepository;
   }
 
-  //  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
-  @Scheduled(fixedRate = 6000000000L)
+  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
     Instant now = Instant.now();

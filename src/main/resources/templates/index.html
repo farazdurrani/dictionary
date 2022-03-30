@@ -31,7 +31,7 @@
     </br>
     <div th:if="${prevWord}">
         <div>Definition of <a target="_blank"
-                              th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
+                              th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
                               th:text="${#strings.capitalize(prevWord)}">
         </a>
         </div>
