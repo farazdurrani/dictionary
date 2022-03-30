@@ -4,6 +4,7 @@ import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.repository.DictionaryRepository;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,6 +60,18 @@ public class ScheduledTasks {
     sendRandomDefinitions(MINIMUM_WORDS);
   }
 
+  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
+  public void backup() throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Backup started");
+    List<String> definitions = dictionaryRepository.findAll().stream().map(
+        Dictionary::getWord).distinct().map(String::toLowerCase).map(this::anchor).sorted(
+        Collections.reverseOrder()).collect(Collectors.toList());
+    definitions.add(0, "Count: " + definitions.size());
+    String subject = "Words Backup";
+    sendEmail(definitions, subject);
+    logger.info("Backup ended");
+  }
+
   private List<String> sendRandomDefinitions(
       int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started random definitions");
@@ -73,17 +87,6 @@ public class ScheduledTasks {
     dictionaryRepository.saveAll(words);
     logger.info("Finished sending random definitions");
     return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
-  }
-
-  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
-  public void backup() throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll().stream().map(
-        Dictionary::getWord).distinct().collect(Collectors.toList());
-    definitions.add(0, "Count: " + definitions.size());
-    String subject = "Words Backup";
-    sendEmail(definitions, subject);
-    logger.info("Backup ended");
   }
 
   private List<Dictionary> setReminded() {
@@ -118,7 +121,7 @@ public class ScheduledTasks {
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {
-        meanings.add(i, counter + "- Definition of " + anchor(word));
+        meanings.add(i, counter + "- Definition of " + anchor(word.toLowerCase()));
         continue;
       }
       meanings.set(i, "- ".concat(meanings.get(i)));
@@ -128,7 +131,7 @@ public class ScheduledTasks {
   }
 
   private String anchor(String word) {
-    return "<a href='https://www.google.com/search?q=define: " + word.toLowerCase() + "' target='_blank'>" + word.toUpperCase() + "</a>";
+    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + StringUtils.capitalize(word) + "</a>";
   }
 
   /**
