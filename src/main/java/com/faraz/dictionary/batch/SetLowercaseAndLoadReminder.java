@@ -10,22 +10,33 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Profile("reminder")
-public class LoadReminder {
+public class SetLowercaseAndLoadReminder {
 
-  private static final Logger logger = LoggerFactory.getLogger(LoadReminder.class);
+  private static final Logger logger = LoggerFactory.getLogger(SetLowercaseAndLoadReminder.class);
 
   @Autowired
   private DictionaryRepository dictionaryRepository;
 
   @PostConstruct
   public void loadReminders() throws IOException {
-    logger.info("Started loading reminders all at once");
     List<Dictionary> words = dictionaryRepository.findAll();
-    dictionaryRepository.saveAll(words);
+    System.out.println("count before " + words.size());
+    Map<String, Dictionary> map = new LinkedHashMap<>();
+    for (Dictionary word : words) {
+      Dictionary _word = new Dictionary();
+      _word.setId(word.getId());
+      _word.setWord(word.getWord().toLowerCase());
+      _word.setLookupTime(word.getLookupTime());
+      _word.setReminded(false);
+      map.put(word.getWord().toLowerCase(), _word);
+    }
+    List<Dictionary> saved = dictionaryRepository.saveAll(map.values());
     logger.info("Finished loading reminders all at once");
   }
 }

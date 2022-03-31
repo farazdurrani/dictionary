@@ -50,7 +50,7 @@ public class ScheduledTasks {
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
     if (words.size() < MINIMUM_WORDS) {
-      sendRandomDefinitions(MINIMUM_WORDS - definitions.size());
+      sendRandomDefinitions(MINIMUM_WORDS - words.size());
     }
     logger.info("Finished 24 hour task");
   }
@@ -74,19 +74,24 @@ public class ScheduledTasks {
 
   private List<String> sendRandomDefinitions(
       int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started random definitions");
+    logger.info("Started random definitions. wordLimit {}", wordLimit);
     Query query = new Query();
     query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(wordLimit);
     List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
     if (words.isEmpty()) {
       words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
-    List<String> definitions = getDefinitions(words);
+    List<String> definitions = getDefinitions(randomize(words));
     sendEmail(definitions, "Random definitions of the week!");
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
     logger.info("Finished sending random definitions");
     return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
+  }
+
+  private Collection<Dictionary> randomize(List<Dictionary> words) {
+    Collections.shuffle(words);
+    return words;
   }
 
   private List<Dictionary> setReminded() {
@@ -103,7 +108,7 @@ public class ScheduledTasks {
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
-    return words.stream().map(Dictionary::getWord).distinct().map(
+    return words.stream().map(Dictionary::getWord).map(String::toLowerCase).distinct().map(
         word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
@@ -121,7 +126,7 @@ public class ScheduledTasks {
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {
-        meanings.add(i, counter + "- Definition of " + anchor(word.toLowerCase()));
+        meanings.add(i, counter + "- Definition of " + anchor(word));
         continue;
       }
       meanings.set(i, "- ".concat(meanings.get(i)));
