@@ -4,6 +4,7 @@ import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.repository.DictionaryRepository;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,7 +50,7 @@ public class ScheduledTasks {
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
     if (words.size() < MINIMUM_WORDS) {
-      sendRandomDefinitions(MINIMUM_WORDS - definitions.size());
+      sendRandomDefinitions(MINIMUM_WORDS - words.size());
     }
     logger.info("Finished 24 hour task");
   }
@@ -58,16 +60,28 @@ public class ScheduledTasks {
     sendRandomDefinitions(MINIMUM_WORDS);
   }
 
+  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
+  public void backup() throws MailjetSocketTimeoutException, MailjetException {
+    logger.info("Backup started");
+    List<String> definitions = dictionaryRepository.findAll().stream().map(
+        Dictionary::getWord).distinct().map(String::toLowerCase).map(this::anchor).sorted(
+        Collections.reverseOrder()).collect(Collectors.toList());
+    definitions.add(0, "Count: " + definitions.size());
+    String subject = "Words Backup";
+    sendEmail(definitions, subject);
+    logger.info("Backup ended");
+  }
+
   private List<String> sendRandomDefinitions(
       int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started random definitions");
+    logger.info("Started random definitions. wordLimit {}", wordLimit);
     Query query = new Query();
     query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(wordLimit);
     List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
     if (words.isEmpty()) {
       words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
-    List<String> definitions = getDefinitions(words);
+    List<String> definitions = getDefinitions(randomize(words));
     sendEmail(definitions, "Random definitions of the week!");
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
@@ -75,15 +89,9 @@ public class ScheduledTasks {
     return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
   }
 
-  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
-  public void backup() throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll().stream().map(
-        Dictionary::getWord).distinct().collect(Collectors.toList());
-    definitions.add(0, "Count: " + definitions.size());
-    String subject = "Words Backup";
-    sendEmail(definitions, subject);
-    logger.info("Backup ended");
+  private Collection<Dictionary> randomize(List<Dictionary> words) {
+    Collections.shuffle(words);
+    return words;
   }
 
   private List<Dictionary> setReminded() {
@@ -100,7 +108,7 @@ public class ScheduledTasks {
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
-    return words.stream().map(Dictionary::getWord).distinct().map(
+    return words.stream().map(Dictionary::getWord).map(String::toLowerCase).distinct().map(
         word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
@@ -128,7 +136,7 @@ public class ScheduledTasks {
   }
 
   private String anchor(String word) {
-    return "<a href='https://www.google.com/search?q=define: " + word.toLowerCase() + "' target='_blank'>" + word.toUpperCase() + "</a>";
+    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + StringUtils.capitalize(word) + "</a>";
   }
 
   /**

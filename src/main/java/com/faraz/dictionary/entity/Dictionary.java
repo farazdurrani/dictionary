@@ -9,7 +9,6 @@ public class Dictionary {
 
   @Id
   private String id;
-
   private String word;
   private Date lookupTime;
   private boolean reminded;
@@ -22,12 +21,32 @@ public class Dictionary {
     this.reminded = reminded;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public String getWord() {
-    return this.word;
+    return word;
+  }
+
+  public void setWord(String word) {
+    this.word = word;
+  }
+
+  public Date getLookupTime() {
+    return lookupTime;
   }
 
   public void setLookupTime(Date lookupTime) {
     this.lookupTime = lookupTime;
+  }
+
+  public boolean isReminded() {
+    return reminded;
   }
 
   public void setReminded(boolean reminded) {

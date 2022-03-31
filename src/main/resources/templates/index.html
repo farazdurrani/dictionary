@@ -3,12 +3,14 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 <script>
+    if(document.getElementById('inputbox')) {
     document.getElementById('inputbox').addEventListener('keyup', function(event) {
     if (event.code === 'Enter') {
       event.preventDefault();
       document.querySelector('form').submit();
     }
     });
+    }
 </script>
 <style>
     .word input {
