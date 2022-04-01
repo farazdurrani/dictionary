@@ -14,7 +14,7 @@
 </script>
 <style>
     .word input {
-    width: calc(100% - 10px);
+    width: calc(100% - 11px);
     line-height: 2;
     font-size: 46px;
     }
@@ -31,11 +31,20 @@
     </form>
     </br>
     <div th:if="${prevWord}">
-        <div>Definition of <a target="_blank" referrerpolicy="no-referrer" rel="noreferrer"
-                              th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
+        <div>Google's <a target="_blank" referrerpolicy="no-referrer" rel="noreferrer"
+                              th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
                               th:text="${#strings.capitalize(prevWord)}">
         </a>
-        </div>
+        <div style="float: right; font-size: 2vw;">Collin's: <a target="_blank" referrerpolicy="no-referrer"
+                                                  rel="noreferrer"
+                              th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
+                              th:text="${#strings.capitalize(prevWord)}">
+        </a>.
+        Pronunciation: <a target="_blank" referrerpolicy="no-referrer" rel="noreferrer"
+                              th:href="@{https://www.google.com/search?q=How to pronounce {word}(word=${prevWord})}"
+                              th:text="${#strings.capitalize(prevWord)}">
+        </a>.
+        </div></div>
     </div>
     </br>
     <tr th:each="definition: ${definitions}">

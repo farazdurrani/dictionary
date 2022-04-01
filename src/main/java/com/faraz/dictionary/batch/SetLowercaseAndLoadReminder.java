@@ -26,7 +26,6 @@ public class SetLowercaseAndLoadReminder {
   @PostConstruct
   public void loadReminders() throws IOException {
     List<Dictionary> words = dictionaryRepository.findAll();
-    System.out.println("count before " + words.size());
     Map<String, Dictionary> map = new LinkedHashMap<>();
     for (Dictionary word : words) {
       Dictionary _word = new Dictionary();
