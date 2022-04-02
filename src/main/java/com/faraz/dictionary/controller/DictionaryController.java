@@ -26,8 +26,9 @@ public class DictionaryController {
   @PostMapping("/")
   public String greetingSubmit(@ModelAttribute Word word, Model model) {
     model.addAttribute("word", new Word());
-    model.addAttribute("prevWord", word.getWord().toLowerCase());
-    model.addAttribute("definitions", dictionaryService.getDefinitions(word.getWord().toLowerCase(), true));
+    String _word = word.getWord().trim().toLowerCase();
+    model.addAttribute("prevWord", _word);
+    model.addAttribute("definitions", dictionaryService.getDefinitions(_word, true));
     return "index";
   }
 }

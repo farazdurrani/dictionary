@@ -24,18 +24,20 @@ public class SetLowercaseAndLoadReminder {
   private DictionaryRepository dictionaryRepository;
 
   @PostConstruct
-  public void loadReminders() throws IOException {
+  public void saveUniqueAndSetReminders() throws IOException {
     List<Dictionary> words = dictionaryRepository.findAll();
+    logger.info("Words loaded: {}", words.size());
     Map<String, Dictionary> map = new LinkedHashMap<>();
     for (Dictionary word : words) {
       Dictionary _word = new Dictionary();
       _word.setId(word.getId());
-      _word.setWord(word.getWord().toLowerCase());
+      _word.setWord(word.getWord().trim().toLowerCase());
       _word.setLookupTime(word.getLookupTime());
       _word.setReminded(false);
-      map.put(word.getWord().toLowerCase(), _word);
+      map.put(word.getWord().trim().toLowerCase(), _word);
     }
     List<Dictionary> saved = dictionaryRepository.saveAll(map.values());
+    logger.info("Words transformed: {}", map.values().size());
     logger.info("Finished loading reminders all at once");
   }
 }

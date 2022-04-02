@@ -108,7 +108,7 @@ public class ScheduledTasks {
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
-    return words.stream().map(Dictionary::getWord).map(String::toLowerCase).distinct().map(
+    return words.stream().map(Dictionary::getWord).map(String::trim).map(String::toLowerCase).distinct().map(
         word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
@@ -136,7 +136,8 @@ public class ScheduledTasks {
   }
 
   private String anchor(String word) {
-    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + StringUtils.capitalize(word) + "</a>";
+    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + StringUtils.capitalize(
+        word) + "</a>";
   }
 
   /**
