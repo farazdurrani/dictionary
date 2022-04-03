@@ -20,7 +20,7 @@ public class DatabaseAop {
   private static final Logger logger = LoggerFactory.getLogger(DatabaseAop.class);
 
   @Around("bean(dictionaryRepository) && execution(* saveAll(..))")
-  public Object interceptSaveAll(ProceedingJoinPoint pjp) throws Throwable {
+  public Object interceptDictionaryRepositorySaveAll(ProceedingJoinPoint pjp) throws Throwable {
     logger.info("Start of Servicing " + ((MethodSignature) pjp.getSignature()).getMethod());
     massage(pjp.getArgs());
     Object retVal = pjp.proceed();
@@ -30,7 +30,7 @@ public class DatabaseAop {
   }
 
   @Around("bean(dictionaryRepository) && execution(* findAll(..))")
-  public Object interceptFindAll(ProceedingJoinPoint pjp) throws Throwable {
+  public Object interceptDictionaryRepositoryFindAll(ProceedingJoinPoint pjp) throws Throwable {
     logger.info("Start of Servicing " + ((MethodSignature) pjp.getSignature()).getMethod());
     Object retVal = pjp.proceed();
     massage(new Object[]{retVal});
@@ -39,7 +39,7 @@ public class DatabaseAop {
   }
 
   @Around("bean(mongoTemplate) && (execution(* save(..)) || execution(* insert(..)))")
-  public Object interceptInsertions(ProceedingJoinPoint pjp) throws Throwable {
+  public Object interceptMongoTemplateInsertions(ProceedingJoinPoint pjp) throws Throwable {
     logger.info("Start of Servicing " + ((MethodSignature) pjp.getSignature()).getMethod());
     Object[] objects = pjp.getArgs();
     massage(objects);
@@ -50,7 +50,7 @@ public class DatabaseAop {
   }
 
   @Around("bean(mongoTemplate) && execution(* find(..)))")
-  public Object interceptInsertions2(ProceedingJoinPoint pjp) throws Throwable {
+  public Object interceptMongoTemplateFind(ProceedingJoinPoint pjp) throws Throwable {
     logger.info("Start of Servicing " + ((MethodSignature) pjp.getSignature()).getMethod());
     Object retVal = pjp.proceed();
     massage(new Object[]{retVal});
@@ -64,9 +64,10 @@ public class DatabaseAop {
       for (Object o : col) {
         massageDictionary(o);
       }
-    }
-    if (args[0] instanceof Dictionary) {
+    } else if (args[0] instanceof Dictionary) {
       massageDictionary(args[0]);
+    } else {
+      throw new RuntimeException("Unknown type " + args.getClass());
     }
   }
 
