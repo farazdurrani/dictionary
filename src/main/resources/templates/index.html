@@ -21,10 +21,13 @@
     a {
     text-decoration:none;
     }
+    div {
+    padding: 5px 5px 5px 5px;
+    }
 </style>
 </head>
 <body>
-<div style="font-size:3vw;">
+<div style="font-size:3.2vw;">
     <form action="#" method="post" th:action="@{/}" th:object="${word}">
         <div class="word"><input autocomplete="off" autofocus id="inputbox" th:field="*{word}" type="text"/>
         </div>
@@ -50,7 +53,7 @@
     <div>
         <tr th:each="definition: ${definitions}">
             <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
-            </br></br>
+            </br>
         </tr>
     </div>
 </div>
