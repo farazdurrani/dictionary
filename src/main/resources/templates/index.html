@@ -33,12 +33,12 @@
 </style>
 </head>
 <body>
-<div style="font-size:3.2vw;">
+<div style="font-size:5.2vw;">
     <form action="#" method="post" th:action="@{/}" th:object="${word}">
         <div class="word"><input autocomplete="off" autofocus id="inputbox" th:field="*{word}" type="text"/>
         </div>
     </form>
-    <div style="font-size: 2.8vw;" th:if="${prevWord}">
+    <div style="font-size: 3.8vw;" th:if="${prevWord}">
         <div th:text="'Definition of ' + ${#strings.capitalize(prevWord)}"></div>
         <table>
             <tr>
