@@ -18,13 +18,13 @@ public class DictionaryController {
   }
 
   @GetMapping("/")
-  public String greetingForm(Model model) {
+  public String handleGet(Model model) {
     model.addAttribute("word", new Word());
     return "index";
   }
 
   @PostMapping("/")
-  public String greetingSubmit(@ModelAttribute Word word, Model model) {
+  public String handlePost(@ModelAttribute Word word, Model model) {
     model.addAttribute("word", new Word());
     String _word = word.getWord().trim().toLowerCase();
     model.addAttribute("prevWord", _word);

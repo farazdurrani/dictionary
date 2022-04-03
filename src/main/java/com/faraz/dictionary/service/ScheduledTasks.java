@@ -143,7 +143,7 @@ public class ScheduledTasks {
   /**
    * Db call
    */
-  public List<Dictionary> wordsFromLast(Instant now, Instant prev) {
+  private List<Dictionary> wordsFromLast(Instant now, Instant prev) {
     Date startDate = Date.from(now);
     Date endDate = Date.from(prev);
     Query query = new Query();
