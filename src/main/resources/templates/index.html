@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <script>
     if(document.getElementById('inputbox')) {
@@ -14,18 +13,22 @@
 </script>
 <style>
     .word input {
-    width: calc(100% - 11px);
-    line-height: 2;
-    font-size: 46px;
+        width: calc(100% - 11px);
+        line-height: 2;
+        font-size: 46px;
     }
     a {
-    text-decoration:none;
+        text-decoration:none;
     }
     div {
-    padding: 5px 5px 5px 5px;
+        padding: 5px 5px 5px 5px;
     }
     th, td {
-    padding: 5px;
+        padding: 5px;
+    }
+    table#spacing {
+        border-collapse:separate;
+        border-spacing:0 7px;
     }
 </style>
 </head>
@@ -35,7 +38,7 @@
         <div class="word"><input autocomplete="off" autofocus id="inputbox" th:field="*{word}" type="text"/>
         </div>
     </form>
-    <div style="font-size: 2.5vw;" th:if="${prevWord}">
+    <div style="font-size: 2.8vw;" th:if="${prevWord}">
         <div th:text="'Definition of ' + ${#strings.capitalize(prevWord)}"></div>
         <table>
             <tr>
@@ -62,10 +65,11 @@
         </table>
     </div>
     <div>
-        <tr th:each="definition: ${definitions}">
-            <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
-            </br>
-        </tr>
+        <table id="spacing" cellspacing="0">
+            <tr th:each="definition: ${definitions}">
+                <td th:text="${definitionStat.count} +'. ' + ${definition}"/>
+            </tr>
+        </table>
     </div>
 </div>
 </body>
