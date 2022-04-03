@@ -1,42 +1,46 @@
 package com.faraz.dictionary.aop;
 
+import com.faraz.dictionary.entity.Dictionary;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Dictionary;
 
 import static java.util.Objects.nonNull;
 
 @Aspect
 @Component
 public class DatabaseAop {
-  @Around("execution(* com.faraz.dictionary.repository.DictionaryRepository.*(..))")
-  public Object interceptFind(ProceedingJoinPoint pjp) throws Throwable {
-//    MethodInvocationProceedingJoinPoint joinPoint = (MethodInvocationProceedingJoinPoint) pjp
-//    CodeSignature methodSignature = (CodeSignature) pjp.getSignature();
-    Object[] obj = pjp.getArgs();
-    if (nonNull(obj) && nonNull(obj[0])) {
-      if (obj[0] instanceof Collection) {
-          Collection col = (Collection) obj[0];
-          for(Object o : col){
-            Dictionary dictionary = (Dictionary) o;
-
-          }
-      } else if(obj[0] instanceof String){
-        String col = (String) obj[0];
-      }
-    }
+  @Around("bean(dictionaryRepository) && execution(* saveAll(..))")
+  public Object interceptSaveAll(ProceedingJoinPoint pjp) throws Throwable {
+    massage(pjp.getArgs());
     Object retVal = pjp.proceed();
+    massage(new Object[]{retVal});
     return retVal;
   }
 
-  @Around("bean(mongoTemplate) && (execution(* save(..)) || execution(* insert(..)) " +
-      "|| execution(* find*(..)))")
+  @Around("bean(dictionaryRepository) && execution(* findAll(..))")
+  public Object interceptFindAll(ProceedingJoinPoint pjp) throws Throwable {
+    Object retVal = pjp.proceed();
+    massage(new Object[]{retVal});
+    return retVal;
+  }
+
+  private void massage(Object[] args) {
+    Collection col = (Collection) args[0];
+    for (Object o : col) {
+      Dictionary dictionary = (Dictionary) o;
+      if (nonNull(dictionary.getWord())) {
+        dictionary.setWord(dictionary.getWord().trim().toLowerCase());
+      }
+    }
+  }
+
+  @Around("bean(mongoTemplate) && (execution(* save(..)) || execution(* insert(..)))")
   public Object intercepInsertions(ProceedingJoinPoint pjp) throws Throwable {
-    Object [] objects = pjp.getArgs();
+    Object[] objects = pjp.getArgs();
     Object retVal = pjp.proceed();
     return retVal;
   }
