@@ -24,6 +24,9 @@
     div {
     padding: 5px 5px 5px 5px;
     }
+    th, td {
+    padding: 5px;
+    }
 </style>
 </head>
 <body>
@@ -34,21 +37,29 @@
     </form>
     <div style="font-size: 2.5vw;" th:if="${prevWord}">
         <div th:text="'Definition of ' + ${#strings.capitalize(prevWord)}"></div>
-        <div><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
-                th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
-                th:text="${'Google''s'}">
-        </a></div>
-        <div><a referrerpolicy="no-referrer" rel="noreferrer"
-                target="_blank"
-                th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
-                th:text="${'Collin''s'}">
-        </a>.
-        </div>
-        <div><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
-                th:href="@{https://www.google.com/search?q=How to pronounce {word}(word=${prevWord})}"
-                th:text="${'Pronunciation'}">
-        </a>.
-        </div>
+        <table>
+            <tr>
+                <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
+                       th:href="@{https://www.google.com/search?q=define: {word}(word=${prevWord})}"
+                       th:text="${'Google'}">
+                </a></td>
+                <td><a referrerpolicy="no-referrer" rel="noreferrer"
+                       target="_blank"
+                       th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
+                       th:text="${'Collin'}">
+                </a></td>
+                <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
+                       th:href="@{https://dictionary.cambridge.org/us/dictionary/english/{word}(word=${prevWord})}"
+                       th:text="${'Cambridge'}">
+                </a></td>
+                <td>
+                    <a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
+                       th:href="@{https://www.google.com/search?q=How to pronounce {word}(word=${prevWord})}"
+                       th:text="${'Pronunciation'}">
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
     <div>
         <tr th:each="definition: ${definitions}">
