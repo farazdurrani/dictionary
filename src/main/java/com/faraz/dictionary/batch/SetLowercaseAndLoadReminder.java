@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
-@Profile("reminder")
+//@Profile("reminder")
 public class SetLowercaseAndLoadReminder {
 
   private static final Logger logger = LoggerFactory.getLogger(SetLowercaseAndLoadReminder.class);
@@ -25,6 +27,7 @@ public class SetLowercaseAndLoadReminder {
 
   @PostConstruct
   public void saveUniqueAndSetReminders() throws IOException {
+//    dictionaryRepository.saveAll(Arrays.asList(new Dictionary()));
     List<Dictionary> words = dictionaryRepository.findAll();
     logger.info("Words loaded: {}", words.size());
     Map<String, Dictionary> map = new LinkedHashMap<>();
