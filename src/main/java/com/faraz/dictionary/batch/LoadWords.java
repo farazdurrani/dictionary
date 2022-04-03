@@ -34,7 +34,8 @@ public class LoadWords {
     mongoTemplate.remove(new Query(), Dictionary.class);
     Date date = Date.from(Instant.now().minus(30, ChronoUnit.DAYS));
     List<Dictionary> dictionaryList = Files.readAllLines(Paths.get("words")).stream().map(String::trim).map(
-        String::toLowerCase).distinct().map(line -> new Dictionary(line, date, false)).collect(Collectors.toList());
+        String::toLowerCase).distinct().map(line -> new Dictionary(line, date, false)).collect(
+        Collectors.toList());
     mongoTemplate.insert(dictionaryList, Dictionary.class);
     logger.info("End of uploadWord ");
   }

@@ -49,7 +49,7 @@ public class DatabaseAop {
     return retVal;
   }
 
-  @Around("bean(mongoTemplate) && execution(* find(..)))")
+  @Around("bean(mongoTemplate) && (execution(* find(..)) || execution(* findAll(..)))")
   public Object interceptMongoTemplateFind(ProceedingJoinPoint pjp) throws Throwable {
     logger.info("Start of Servicing " + ((MethodSignature) pjp.getSignature()).getMethod());
     Object retVal = pjp.proceed();

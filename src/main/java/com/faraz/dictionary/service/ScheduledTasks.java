@@ -108,7 +108,7 @@ public class ScheduledTasks {
 
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
-    return words.stream().map(Dictionary::getWord).map(String::trim).map(String::toLowerCase).distinct().map(
+    return words.stream().map(Dictionary::getWord).distinct().map(
         word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
         Collectors.toList());
   }
