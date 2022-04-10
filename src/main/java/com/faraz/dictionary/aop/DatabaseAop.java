@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -66,8 +67,12 @@ public class DatabaseAop {
       }
     } else if (args[0] instanceof Dictionary) {
       massageDictionary(args[0]);
+    } else if (args[0] instanceof PageImpl){
+      for(Object o : ((PageImpl<Dictionary>) args[0]).getContent()){
+        massageDictionary(o);
+      }
     } else {
-      throw new RuntimeException("Unknown type " + args.getClass());
+      throw new RuntimeException("Unknown type " + args[0].getClass());
     }
   }
 

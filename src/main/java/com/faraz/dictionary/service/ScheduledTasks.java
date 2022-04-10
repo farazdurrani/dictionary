@@ -7,6 +7,8 @@ import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,18 +28,20 @@ import java.util.stream.Collectors;
 public class ScheduledTasks {
 
   private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
-  private static final int MINIMUM_WORDS = 50;
   private final MongoTemplate mongoTemplate;
   private final EmailService emailService;
   private final DictionaryService dictionaryService;
   private final DictionaryRepository dictionaryRepository;
+  private final int minimumWords;
 
   public ScheduledTasks(MongoTemplate mongoTemplate, EmailService emailService,
-                        DictionaryService dictionaryService, DictionaryRepository dictionaryRepository) {
+                        DictionaryService dictionaryService, DictionaryRepository dictionaryRepository,
+                        @Value("${minimum:25}") int mininumWords) {
     this.mongoTemplate = mongoTemplate;
     this.emailService = emailService;
     this.dictionaryService = dictionaryService;
     this.dictionaryRepository = dictionaryRepository;
+    this.minimumWords = mininumWords;
   }
 
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
@@ -49,23 +53,23 @@ public class ScheduledTasks {
     List<String> definitions = getDefinitions(words);
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
-    if (words.size() < MINIMUM_WORDS) {
-      sendRandomDefinitions(MINIMUM_WORDS - words.size());
+    if (words.size() < minimumWords) {
+      sendRandomDefinitions(minimumWords - words.size());
     }
     logger.info("Finished 24 hour task");
   }
 
   @Scheduled(cron = "0 0 4 * * SUN", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    sendRandomDefinitions(MINIMUM_WORDS);
+    sendRandomDefinitions(minimumWords);
   }
 
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll().stream().map(
-        Dictionary::getWord).distinct().map(String::toLowerCase).map(this::anchor).sorted(
-        Collections.reverseOrder()).collect(Collectors.toList());
+    List<String> definitions = this.dictionaryRepository.findAll(
+        Sort.by(Sort.Direction.DESC, "lookupTime")).stream().map(Dictionary::getWord).distinct().map(
+        this::anchor).collect(Collectors.toList());
     definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
     sendEmail(definitions, subject);
