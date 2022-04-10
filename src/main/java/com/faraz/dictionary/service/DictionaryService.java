@@ -36,16 +36,24 @@ public class DictionaryService {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
-  public List<String> getDefinitions(String word, boolean save) {
+  public List<String> getDefinitions(String word) {
+    Optional<Dictionary> saved = this.dictionaryRepository.findByWord(word).filter(
+        dictionary -> !dictionary.getDefinitions().isEmpty());
+    if(saved.isPresent()){
+      Dictionary dictionary = saved.get();
+      dictionary.setLookupTime(new Date());
+      this.dictionaryRepository.save(dictionary);
+      return dictionary.getDefinitions();
+    }
     List<String> definitions = merriamWebsterDefinitions(word);
     List<String> freeDictionaryDefinitions = freeDictionaryDefinitions(word);
     definitions.addAll(freeDictionaryDefinitions);
-    save(definitions, word, save);
+    save(definitions, word);
     return definitions;
   }
 
-  private void save(List<String> definitions, String word, boolean save) {
-    if (!definitions.isEmpty() && !definitions.get(0).contains(NO_DEFINITION_FOUND) && save) {
+  private void save(List<String> definitions, String word) {
+    if (!definitions.isEmpty() && !definitions.get(0).contains(NO_DEFINITION_FOUND)) {
       Dictionary _word = new Dictionary(word, new Date(), false);
       Optional<Dictionary> saved = this.dictionaryRepository.findByWord(word);
       if (saved.isPresent()) {

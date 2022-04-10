@@ -3,6 +3,7 @@ package com.faraz.dictionary.entity;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class Dictionary {
@@ -12,6 +13,7 @@ public class Dictionary {
   private String word;
   private Date lookupTime;
   private boolean reminded;
+  private List<String> definitions;
 
   public Dictionary() {}
 
@@ -51,5 +53,13 @@ public class Dictionary {
 
   public void setReminded(boolean reminded) {
     this.reminded = reminded;
+  }
+
+  public List<String> getDefinitions() {
+    return definitions;
+  }
+
+  public void setDefinitions(List<String> definitions) {
+    this.definitions = definitions;
   }
 }

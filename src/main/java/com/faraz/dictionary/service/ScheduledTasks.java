@@ -122,7 +122,7 @@ public class ScheduledTasks {
   }
 
   private List<String> massageDefinition(String word, int counter) {
-    List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
+    List<String> meanings = dictionaryService.getDefinitions(word).stream().limit(6).collect(
         Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {

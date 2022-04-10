@@ -28,7 +28,7 @@ public class DictionaryController {
     model.addAttribute("word", new Word());
     String _word = word.getWord().trim().toLowerCase();
     model.addAttribute("prevWord", _word);
-    model.addAttribute("definitions", dictionaryService.getDefinitions(_word, true));
+    model.addAttribute("definitions", dictionaryService.getDefinitions(_word));
     return "index";
   }
 }
