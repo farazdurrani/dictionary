@@ -47,12 +47,12 @@ public class DictionaryService {
   private void save(List<String> definitions, String word, boolean save) {
     if (!definitions.isEmpty() && !definitions.get(0).contains(NO_DEFINITION_FOUND) && save) {
       Dictionary _word = new Dictionary(word, new Date(), false);
-      Optional<Dictionary> saved = this.dictionaryRepository.findByWord(word);
+      Optional<Dictionary> saved = dictionaryRepository.findByWord(word);
       if (saved.isPresent()) {
         _word = saved.get();
         _word.setLookupTime(new Date());
       }
-      this.dictionaryRepository.save(_word);
+      dictionaryRepository.save(_word);
     }
   }
 

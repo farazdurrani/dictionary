@@ -67,7 +67,7 @@ public class ScheduledTasks {
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = this.dictionaryRepository.findAll(
+    List<String> definitions = dictionaryRepository.findAll(
         Sort.by(Sort.Direction.DESC, "lookupTime")).stream().map(Dictionary::getWord).distinct().map(
         this::anchor).collect(Collectors.toList());
     definitions.add(0, "Count: " + definitions.size());
