@@ -1,5 +1,6 @@
 package com.faraz.dictionary.controller;
 
+import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.service.EmailService;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
@@ -59,7 +60,7 @@ public class HealthController {
 
   private String mongoHealth() {
     try {
-      mongoTemplate.getCollection("dictionary").countDocuments();
+      mongoTemplate.getCollection(mongoTemplate.getCollectionName(Dictionary.class)).countDocuments();
       //above line didn't throw error so mongo is up.
       return "Mongo is up.";
     } catch (Exception e) {

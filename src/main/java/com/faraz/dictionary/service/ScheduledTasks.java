@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SampleOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -79,23 +81,24 @@ public class ScheduledTasks {
   private List<String> sendRandomDefinitions(
       int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started random definitions. wordLimit {}", wordLimit);
-    Query query = new Query();
-    query.addCriteria(Criteria.where("reminded").is(Boolean.valueOf(false))).limit(wordLimit);
-    List<Dictionary> words = mongoTemplate.find(query, Dictionary.class);
+    //To countervail for duplicates as mongo's $sample can return duplicates
+    int wordLimitExtended = wordLimit + 20;
+    MatchOperation matchStage = Aggregation.match(Criteria.where("reminded").is(false));
+    SampleOperation sampleOperation = Aggregation.sample(wordLimitExtended);
+    Aggregation aggregation = Aggregation.newAggregation(matchStage, sampleOperation);
+    List<Dictionary> words = mongoTemplate.aggregate(aggregation,
+        mongoTemplate.getCollectionName(Dictionary.class),
+        Dictionary.class).getMappedResults().stream().distinct().limit(wordLimit).collect(
+        Collectors.toList());
     if (words.isEmpty()) {
       words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
-    List<String> definitions = getDefinitions(randomize(words));
+    List<String> definitions = getDefinitions(words);
     sendEmail(definitions, "Random definitions of the week!");
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
     logger.info("Finished sending random definitions");
     return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
-  }
-
-  private Collection<Dictionary> randomize(List<Dictionary> words) {
-    Collections.shuffle(words);
-    return words;
   }
 
   private List<Dictionary> setReminded() {
