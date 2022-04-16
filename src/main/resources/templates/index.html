@@ -58,6 +58,10 @@
                        th:href="@{https://www.google.com/search?q=How to pronounce {word}(word=${prevWord})}"
                        th:text="${'Pronunciation'}">
                 </a></td>
+                <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
+                       th:href="@{https://www.merriam-webster.com/thesaurus/{word}(word=${prevWord})}"
+                       th:text="${'Thesaurus'}">
+                </a></td>
             </tr>
         </table>
     </div>

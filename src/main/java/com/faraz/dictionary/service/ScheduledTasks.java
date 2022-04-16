@@ -94,7 +94,8 @@ public class ScheduledTasks {
       words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
     List<String> definitions = getDefinitions(words);
-    sendEmail(definitions, "Random definitions of the week!");
+    String subjectLine = wordLimit == minimumWords ? "Random definitions for the week!" : "Rest of the Random " + "Definitions for the Day!";
+    sendEmail(definitions, subjectLine);
     words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
     dictionaryRepository.saveAll(words);
     logger.info("Finished sending random definitions");
