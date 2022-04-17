@@ -1,8 +1,10 @@
 package com.faraz.dictionary;
 
+import com.faraz.dictionary.service.EmailService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.task.TaskSchedulerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.DbRefResolver;
@@ -38,5 +40,12 @@ public class DictionaryApplication implements CommandLineRunner {
     MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
     converter.setTypeMapper(new DefaultMongoTypeMapper(null));
     return converter;
+  }
+
+  @Bean
+  public TaskSchedulerCustomizer taskSchedular(EmailService emailService){
+    return customizer -> {
+      customizer.setErrorHandler(new ScheduledErrorHandler(emailService));
+    };
   }
 }

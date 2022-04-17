@@ -46,6 +46,7 @@ public class ScheduledTasks {
     this.minimumWords = mininumWords;
   }
 
+//  @Scheduled(fixedRate = 9999999L, initialDelay = 5000L)
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
