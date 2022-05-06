@@ -46,7 +46,7 @@ public class ScheduledTasks {
     this.minimumWords = mininumWords;
   }
 
-//  @Scheduled(fixedRate = 9999999L, initialDelay = 5000L)
+  //  @Scheduled(fixedRate = 9999999L, initialDelay = 5000L)
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
@@ -79,16 +79,16 @@ public class ScheduledTasks {
     logger.info("Backup ended");
   }
 
-  private List<String> sendRandomDefinitions(
-      int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
+  private List<String> sendRandomDefinitions(int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started random definitions. wordLimit {}", wordLimit);
     //To countervail for duplicates as mongo's $sample can return duplicates
     int wordLimitExtended = wordLimit + 20;
-    MatchOperation matchStage = Aggregation.match(Criteria.where("reminded").is(false));
+    MatchOperation matchStage =
+        Aggregation.match(new Criteria().andOperator(Criteria.where("reminded").is(false),
+            Criteria.where("lookupTime").lt(Date.from(Instant.now().minus(7, ChronoUnit.DAYS)))));
     SampleOperation sampleOperation = Aggregation.sample(wordLimitExtended);
     Aggregation aggregation = Aggregation.newAggregation(matchStage, sampleOperation);
-    List<Dictionary> words = mongoTemplate.aggregate(aggregation,
-        mongoTemplate.getCollectionName(Dictionary.class),
+    List<Dictionary> words = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Dictionary.class),
         Dictionary.class).getMappedResults().stream().distinct().limit(wordLimit).collect(
         Collectors.toList());
     if (words.isEmpty()) {
