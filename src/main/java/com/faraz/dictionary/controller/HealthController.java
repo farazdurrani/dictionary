@@ -37,13 +37,22 @@ public class HealthController {
 
   @GetMapping("/health")
   public String health() throws MailjetSocketTimeoutException, MailjetException {
-    StringBuilder health = new StringBuilder();
     String htmlLineSeparator = "<br>";
-    health.append(merriamWebsterHealth()).append(htmlLineSeparator);
-    health.append(freeDictionaryHealth()).append(htmlLineSeparator);
-    health.append(mongoHealth()).append(htmlLineSeparator);
-    health.append(emailHealth()).append(htmlLineSeparator);
-    return health.toString();
+    return new StringBuilder()
+        .append(merriamWebsterHealth()).append(htmlLineSeparator)
+        .append(freeDictionaryHealth()).append(htmlLineSeparator)
+        .append(mongoHealth()).append(htmlLineSeparator)
+        .append(emailHealth()).append(htmlLineSeparator)
+        .append(herokuInfo()).append(htmlLineSeparator)
+        .toString();
+  }
+
+  private String herokuInfo() {
+    String htmlLineSeparator = "<br>";
+    return new StringBuilder("Release Time ").append(System.getenv("HEROKU_RELEASE_CREATED_AT"))
+        .append(htmlLineSeparator).append("Release Version ").append(System.getenv("HEROKU_RELEASE_VERSION"))
+        .append(htmlLineSeparator).append("Release Commit ").append(System.getenv("HEROKU_SLUG_COMMIT"))
+        .append(htmlLineSeparator).toString();
   }
 
   private String emailHealth() throws MailjetSocketTimeoutException, MailjetException {
