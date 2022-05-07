@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -46,66 +47,58 @@ public class ScheduledTasks {
     this.minimumWords = mininumWords;
   }
 
-  //  @Scheduled(fixedRate = 9999999L, initialDelay = 5000L)
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
-    Collection<Dictionary> words = wordsFromLast(now, prev);
+    List<Dictionary> words = wordsFromLast(now, prev);
     List<String> definitions = getDefinitions(words);
     String subject = "Words lookup in the past 24 hours";
     sendEmail(definitions, subject);
-    if (words.size() < minimumWords) {
-      sendRandomDefinitions(minimumWords - words.size());
-    }
     logger.info("Finished 24 hour task");
   }
 
-  @Scheduled(cron = "0 0 4 * * SUN", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 4 * * *", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    sendRandomDefinitions(minimumWords);
+    Instant now = Instant.now();
+    Instant prev = now.minus(1, ChronoUnit.DAYS);
+    List<Dictionary> words = wordsFromLast(now, prev);
+    if (words.size() >= minimumWords) {
+      logger.info("Enough words lookup in the past 24 hours. Not sending random definitions.");
+      return;
+    }
+    int wordLimit = minimumWords - words.size();
+    logger.info("Started random definitions. wordLimit {}", wordLimit);
+    Aggregation aggregation = createAggregationQuery(wordLimit);
+    words = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Dictionary.class), Dictionary.class)
+        .getMappedResults();
+    if (words.isEmpty()) {
+      words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
+    }
+    List<String> definitions = getDefinitions(words);
+    String subjectLine = "Random Definitions for the Day!";
+    sendEmail(definitions, subjectLine);
+    words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
+    dictionaryRepository.saveAll(words);
+    logger.info("Finished sending random definitions");
   }
 
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll(
-        Sort.by(Sort.Direction.DESC, "lookupTime")).stream().map(Dictionary::getWord).distinct().map(
-        this::anchor).collect(Collectors.toList());
+    List<String> definitions = dictionaryRepository.findAll(Sort.by(Sort.Direction.DESC, "lookupTime")).stream()
+        .map(Dictionary::getWord).distinct().map(this::anchor).collect(Collectors.toList());
     definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
     sendEmail(definitions, subject);
     logger.info("Backup ended");
   }
 
-  private List<String> sendRandomDefinitions(int wordLimit) throws MailjetSocketTimeoutException, MailjetException {
-    logger.info("Started random definitions. wordLimit {}", wordLimit);
-    //To countervail for duplicates as mongo's $sample can return duplicates
-    int wordLimitExtended = wordLimit + 20;
-    MatchOperation matchStage =
-        Aggregation.match(new Criteria().andOperator(Criteria.where("reminded").is(false),
-            Criteria.where("lookupTime").lt(Date.from(Instant.now().minus(7, ChronoUnit.DAYS)))));
-    SampleOperation sampleOperation = Aggregation.sample(wordLimitExtended);
-    Aggregation aggregation = Aggregation.newAggregation(matchStage, sampleOperation);
-    List<Dictionary> words = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Dictionary.class),
-        Dictionary.class).getMappedResults().stream().distinct().limit(wordLimit).collect(
-        Collectors.toList());
-    if (words.isEmpty()) {
-      words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
-    }
-    List<String> definitions = getDefinitions(words);
-    String subjectLine = wordLimit == minimumWords ? "Random definitions for the week!" : "Rest of the Random " + "Definitions for the Day!";
-    sendEmail(definitions, subjectLine);
-    words = words.stream().map(w -> setReminded(w, true)).collect(Collectors.toList());
-    dictionaryRepository.saveAll(words);
-    logger.info("Finished sending random definitions");
-    return words.stream().map(Dictionary::getWord).collect(Collectors.toList());
-  }
-
   private List<Dictionary> setReminded() {
-    List<Dictionary> allWords = mongoTemplate.findAll(Dictionary.class).stream().map(
-        w -> setReminded(w, false)).collect(Collectors.toList());
+    Query query = new Query().addCriteria(Criteria.where("lookupTime").lt(Date.from(Instant.now().minus(7, ChronoUnit.DAYS))));
+    List<Dictionary> allWords = mongoTemplate.find(query, Dictionary.class).stream().map(w -> setReminded(w, false))
+        .collect(Collectors.toList());
     dictionaryRepository.saveAll(allWords);
     return allWords;
   }
@@ -149,6 +142,13 @@ public class ScheduledTasks {
         word) + "</a>";
   }
 
+  private Aggregation createAggregationQuery(int wordLimit) {
+    MatchOperation matchStage = Aggregation.match(new Criteria().andOperator(Criteria.where("reminded").is(false),
+        Criteria.where("lookupTime").lt(Date.from(Instant.now().minus(7, ChronoUnit.DAYS)))));
+    SampleOperation sampleOperation = Aggregation.sample(wordLimit);
+    return Aggregation.newAggregation(matchStage, sampleOperation);
+  }
+
   /**
    * Db call
    */
@@ -157,6 +157,6 @@ public class ScheduledTasks {
     Date endDate = Date.from(prev);
     Query query = new Query();
     query.addCriteria(Criteria.where("lookupTime").gte(endDate).lt(startDate));
-    return mongoTemplate.find(query, Dictionary.class);
+    return new ArrayList<>(mongoTemplate.find(query, Dictionary.class));
   }
 }
