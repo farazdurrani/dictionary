@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+import java.time.ZoneId;
+
+import static java.util.Objects.isNull;
+
 @RestController
 public class HealthController {
 
@@ -38,33 +43,40 @@ public class HealthController {
   @GetMapping("/health")
   public String health() throws MailjetSocketTimeoutException, MailjetException {
     String htmlLineSeparator = "<br>";
-    return new StringBuilder()
+    StringBuilder sb = new StringBuilder()
         .append(merriamWebsterHealth()).append(htmlLineSeparator)
         .append(freeDictionaryHealth()).append(htmlLineSeparator)
         .append(mongoHealth()).append(htmlLineSeparator)
-        .append(emailHealth()).append(htmlLineSeparator)
-        .append(herokuInfo()).append(htmlLineSeparator)
-        .toString();
+        .append(herokuInfo()).append(htmlLineSeparator);
+    return emailHealth(sb);
   }
 
   private String herokuInfo() {
     String htmlLineSeparator = "<br>";
-    return new StringBuilder("Release Time ").append(System.getenv("HEROKU_RELEASE_CREATED_AT"))
+    return new StringBuilder("Release Time ").append(dateTime())
         .append(htmlLineSeparator).append("Release Version ").append(System.getenv("HEROKU_RELEASE_VERSION"))
         .append(htmlLineSeparator).append("Release Commit ").append(System.getenv("HEROKU_SLUG_COMMIT"))
         .append(htmlLineSeparator).toString();
   }
 
-  private String emailHealth() throws MailjetSocketTimeoutException, MailjetException {
+  private String dateTime() {
+    String dateTime = System.getenv("HEROKU_RELEASE_CREATED_AT");
+    if (isNull(dateTime)) {
+      return "Can't determine time of deployment.";
+    }
+    return Instant.parse(dateTime).atZone(ZoneId.of("America/Chicago")).toString();
+  }
+
+  private String emailHealth(StringBuilder sb) throws MailjetSocketTimeoutException, MailjetException {
     try {
-      int statusCode = emailService.sendEmail("ping", "pong");
+      int statusCode = emailService.sendEmail("ping", sb.toString());
       if (statusCode == 200) {
-        return "Email service is up. ";
+        return sb.append("Email service is up. ").toString();
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return "Email service is down";
+    return sb.append("Email service is down").toString();
   }
 
   private String mongoHealth() {
