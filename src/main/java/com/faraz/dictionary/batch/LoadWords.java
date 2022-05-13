@@ -40,7 +40,7 @@ public class LoadWords {
     List<Date> dates = date(2256); //TODO do you need that many dates?
     List<Dictionary> dictionaryList = Files.readAllLines(Paths.get("words")).stream().map(String::trim)
         .map(String::toLowerCase).distinct().map(line -> new Dictionary(line, dates.remove(dates.size() - 1), false))
-        .collect(Collectors.toList());c
+        .collect(Collectors.toList());
     mongoTemplate.insert(dictionaryList, Dictionary.class);
     logger.info("End of uploadWord ");
   }
