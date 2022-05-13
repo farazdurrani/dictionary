@@ -43,7 +43,7 @@ public class DictionaryApplication implements CommandLineRunner {
   }
 
   @Bean
-  public TaskSchedulerCustomizer taskSchedular(EmailService emailService){
+  public TaskSchedulerCustomizer taskSchedular(EmailService emailService) {
     return customizer -> {
       customizer.setErrorHandler(new ScheduledErrorHandler(emailService));
     };
