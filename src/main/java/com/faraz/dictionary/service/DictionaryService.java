@@ -45,6 +45,16 @@ public class DictionaryService {
     }
   }
 
+  public String save(String word) {
+    if (dictionaryRepository.findByWord(word).isEmpty()) {
+      Dictionary dictionaryInstance = new Dictionary(word, new Date(), false);
+      dictionaryRepository.save(dictionaryInstance);
+      return word + " saved";
+    } else {
+      return word + " already in there";
+    }
+  }
+
   public List<String> getDefinitionsV2(String word) {
     List<String> definitions = merriamWebsterDefinitions(word);
     definitions.addAll(freeDictionaryDefinitions(word));

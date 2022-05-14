@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<script>
+    <script>
     if(document.getElementById('inputbox')) {
     document.getElementById('inputbox').addEventListener('keyup', function(event) {
     if (event.code === 'Enter') {
@@ -10,8 +10,9 @@
     }
     });
     }
-</script>
-<style>
+
+    </script>
+    <style>
     .word input {
         width: calc(100% - 11px);
         line-height: 2;
@@ -30,7 +31,8 @@
         border-collapse:separate;
         border-spacing:0 8px;
     }
-</style>
+
+    </style>
 </head>
 <body>
 <div style="font-size:5.2vw;">
@@ -50,10 +52,10 @@
                        th:href="@{https://www.collinsdictionary.com/dictionary/english/{word}(word=${prevWord})}"
                        th:text="${'Collin'}">
                 </a></td>
-                <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
-                       th:href="@{https://dictionary.cambridge.org/us/dictionary/english/{word}(word=${prevWord})}"
-                       th:text="${'Cambridge'}">
-                </a></td>
+                <!--                <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"-->
+                <!--                       th:href="@{https://dictionary.cambridge.org/us/dictionary/english/{word}(word=${prevWord})}"-->
+                <!--                       th:text="${'Cambridge'}">-->
+                <!--                </a></td>-->
                 <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
                        th:href="@{https://www.google.com/search?q=How to pronounce {word}(word=${prevWord})}"
                        th:text="${'Pronunciation'}">
@@ -61,6 +63,10 @@
                 <td><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
                        th:href="@{https://www.merriam-webster.com/thesaurus/{word}(word=${prevWord})}"
                        th:text="${'Thesaurus'}">
+                </a></td>
+                <td th:if="${noDefinition}"><a referrerpolicy="no-referrer" rel="noreferrer" target="_blank"
+                       th:href="@{/save/{word}(word=${prevWord})}"
+                       th:text="${'Save'}">
                 </a></td>
             </tr>
         </table>
