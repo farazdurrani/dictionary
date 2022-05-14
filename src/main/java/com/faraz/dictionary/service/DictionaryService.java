@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,23 +35,26 @@ public class DictionaryService {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
-  public List<String> getDefinitions(String word, boolean save) {
+  public List<String> getDefinitions(String word) {
+    if (dictionaryRepository.findByWord(word).isPresent()) {
+      return List.of("Already Looked-up");
+    } else {
+      List<String> definitions = getDefinitionsV2(word);
+      save(word, definitions);
+      return definitions;
+    }
+  }
+
+  public List<String> getDefinitionsV2(String word) {
     List<String> definitions = merriamWebsterDefinitions(word);
-    List<String> freeDictionaryDefinitions = freeDictionaryDefinitions(word);
-    definitions.addAll(freeDictionaryDefinitions);
-    save(definitions, word, save);
+    definitions.addAll(freeDictionaryDefinitions(word));
     return definitions;
   }
 
-  private void save(List<String> definitions, String word, boolean save) {
-    if (!definitions.isEmpty() && !definitions.get(0).contains(NO_DEFINITION_FOUND) && save) {
-      Dictionary _word = new Dictionary(word, new Date(), false);
-      Optional<Dictionary> saved = dictionaryRepository.findByWord(word);
-      if (saved.isPresent()) {
-        _word = saved.get();
-        _word.setLookupTime(new Date());
-      }
-      dictionaryRepository.save(_word);
+  private void save(String word, List<String> definitions) {
+    if (!definitions.isEmpty() && !definitions.get(0).contains(NO_DEFINITION_FOUND)) {
+      Dictionary dictionaryInstance = new Dictionary(word, new Date(), false);
+      dictionaryRepository.save(dictionaryInstance);
     }
   }
 

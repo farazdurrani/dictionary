@@ -37,9 +37,8 @@ public class ScheduledTasks {
   private final DictionaryRepository dictionaryRepository;
   private final int minimumWords;
 
-  public ScheduledTasks(MongoTemplate mongoTemplate, EmailService emailService,
-                        DictionaryService dictionaryService, DictionaryRepository dictionaryRepository,
-                        @Value("${minimum:25}") int mininumWords) {
+  public ScheduledTasks(MongoTemplate mongoTemplate, EmailService emailService, DictionaryService dictionaryService,
+                        DictionaryRepository dictionaryRepository, @Value("${minimum:25}") int mininumWords) {
     this.mongoTemplate = mongoTemplate;
     this.emailService = emailService;
     this.dictionaryService = dictionaryService;
@@ -59,7 +58,7 @@ public class ScheduledTasks {
     logger.info("Finished 24 hour task");
   }
 
-  @Scheduled(cron = "0 0 4 * * *", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
     Instant now = Instant.now();
     Instant prev = now.minus(1, ChronoUnit.DAYS);
@@ -71,8 +70,8 @@ public class ScheduledTasks {
     int wordLimit = minimumWords - words.size();
     logger.info("Started random definitions. wordLimit {}", wordLimit);
     Aggregation aggregation = createAggregationQuery(wordLimit);
-    words = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Dictionary.class), Dictionary.class)
-        .getMappedResults();
+    words = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Dictionary.class),
+        Dictionary.class).getMappedResults();
     if (words.isEmpty()) {
       words = setReminded().stream().limit(wordLimit).collect(Collectors.toList());
     }
@@ -87,8 +86,8 @@ public class ScheduledTasks {
   @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll(Sort.by(Sort.Direction.DESC, "lookupTime")).stream()
-        .map(Dictionary::getWord).distinct().map(this::anchor).collect(Collectors.toList());
+    List<String> definitions = dictionaryRepository.findAll(Sort.by(Sort.Direction.DESC, "lookupTime")).stream().map(
+        Dictionary::getWord).distinct().map(this::anchor).collect(Collectors.toList());
     definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
     sendEmail(definitions, subject);
@@ -97,8 +96,8 @@ public class ScheduledTasks {
 
   private List<Dictionary> setReminded() {
     Query query = new Query().addCriteria(Criteria.where("lookupTime").lt(Date.from(Instant.now().minus(7, ChronoUnit.DAYS))));
-    List<Dictionary> allWords = mongoTemplate.find(query, Dictionary.class).stream().map(w -> setReminded(w, false))
-        .collect(Collectors.toList());
+    List<Dictionary> allWords = mongoTemplate.find(query, Dictionary.class).stream().map(w -> setReminded(w, false)).collect(
+        Collectors.toList());
     dictionaryRepository.saveAll(allWords);
     return allWords;
   }
@@ -111,12 +110,10 @@ public class ScheduledTasks {
   private List<String> getDefinitions(Collection<Dictionary> words) {
     AtomicInteger count = new AtomicInteger(1);
     return words.stream().map(Dictionary::getWord).distinct().map(
-        word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(
-        Collectors.toList());
+        word -> massageDefinition(word, count.getAndIncrement())).flatMap(List::stream).collect(Collectors.toList());
   }
 
-  private void sendEmail(List<String> definitions,
-                         String subject) throws MailjetSocketTimeoutException, MailjetException {
+  private void sendEmail(List<String> definitions, String subject) throws MailjetSocketTimeoutException, MailjetException {
     String body = String.join("<br>", definitions);
     body = "<div style=\"font-size:20px\">" + body + "</div>";
     int status = emailService.sendEmail(subject, body);
@@ -124,8 +121,7 @@ public class ScheduledTasks {
   }
 
   private List<String> massageDefinition(String word, int counter) {
-    List<String> meanings = dictionaryService.getDefinitions(word, false).stream().limit(6).collect(
-        Collectors.toList());
+    List<String> meanings = dictionaryService.getDefinitionsV2(word).stream().limit(6).collect(Collectors.toList());
     for (int i = 0; i < meanings.size(); i++) {
       if (i == 0) {
         meanings.add(i, counter + "- Definition of " + anchor(word));
