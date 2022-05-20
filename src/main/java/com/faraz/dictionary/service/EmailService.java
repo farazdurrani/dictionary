@@ -1,44 +1,41 @@
 package com.faraz.dictionary.service;
 
-import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
-import com.mailjet.client.resource.Emailv31;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import static com.mailjet.client.resource.Emailv31.MESSAGES;
+import static com.mailjet.client.resource.Emailv31.Message.FROM;
+import static com.mailjet.client.resource.Emailv31.Message.HTMLPART;
+import static com.mailjet.client.resource.Emailv31.Message.SUBJECT;
+import static com.mailjet.client.resource.Emailv31.Message.TO;
+import static com.mailjet.client.resource.Emailv31.resource;
+
 @Service
 public class EmailService {
 
-  private final String mailjetApiKey;
-  private final String mailjetApiSecret;
+  private final MailjetClient mailjetClient;
   private final String from;
   private final String to;
 
-  public EmailService(@Value("${mailjet.apiKey}") String mailjetApiKey,
-                      @Value("${mailjet.apiSecret}") String mailjetApiSecret,
-                      @Value("${mailjet.from}") String from, @Value("${mailjet.to}") String to) {
-    this.mailjetApiKey = mailjetApiKey;
-    this.mailjetApiSecret = mailjetApiSecret;
+  public EmailService(MailjetClient mailjetClient, @Value("${mailjet.from}") String from, @Value("${mailjet.to}") String to) {
+    this.mailjetClient = mailjetClient;
     this.from = from;
     this.to = to;
   }
 
   public int sendEmail(String subject, String body) throws MailjetSocketTimeoutException, MailjetException {
-    MailjetClient client = new MailjetClient(mailjetApiKey, mailjetApiSecret, new ClientOptions("v3.1"));
-    MailjetRequest request = new MailjetRequest(Emailv31.resource).property(Emailv31.MESSAGES,
-        new JSONArray().put(new JSONObject().put(Emailv31.Message.FROM,
-            new JSONObject().put("Email", "faraz.uic2@gmail.com").put("Name", "Personal Dictionary")).put(
-            Emailv31.Message.TO, new JSONArray().put(
-                new JSONObject().put("Email", "faraz.uic2@gmail.com").put("Name",
-                    "Personal Dictionary"))).put(Emailv31.Message.SUBJECT, subject).put(
-            Emailv31.Message.HTMLPART, body)));
-    MailjetResponse response = client.post(request);
+    MailjetRequest request = new MailjetRequest(resource).property(MESSAGES, new JSONArray().put(new JSONObject()
+        .put(FROM, new JSONObject().put("Email", this.from).put("Name", "Personal Dictionary")).put(TO, new JSONArray()
+            .put(new JSONObject().put("Email", this.to).put("Name", "Personal Dictionary"))).put(SUBJECT, subject)
+        .put(HTMLPART, body)));
+    MailjetResponse response = mailjetClient.post(request);
     return response.getStatus();
   }
 }

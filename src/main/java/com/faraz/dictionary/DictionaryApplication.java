@@ -1,6 +1,9 @@
 package com.faraz.dictionary;
 
 import com.faraz.dictionary.service.EmailService;
+import com.mailjet.client.ClientOptions;
+import com.mailjet.client.MailjetClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,4 +51,11 @@ public class DictionaryApplication implements CommandLineRunner {
       customizer.setErrorHandler(new ScheduledErrorHandler(emailService));
     };
   }
+
+  @Bean
+  public MailjetClient mailjetClient(@Value("${mailjet.apiKey}") String mailjetApiKey,
+                                     @Value("${mailjet.apiSecret}") String mailjetApiSecret) {
+    return new MailjetClient(mailjetApiKey, mailjetApiSecret, new ClientOptions("v3.1"));
+  }
+
 }
