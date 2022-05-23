@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import static java.util.List.of;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -36,15 +37,9 @@ public class DictionaryService {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
-  //delete this method and replace it by getDefinitionsOrig
   public List<String> getDefinitions(String word) {
-    return getDefinitionsV2(word);
-  }
-
-  //keep this method
-  public List<String> getDefinitionsOrig(String word) {
     if (dictionaryRepository.findByWord(word).isPresent()) {
-      return List.of("Already Looked-up");
+      return of("Already Looked-up");
     } else {
       List<String> definitions = getDefinitionsV2(word);
       save(word, definitions);
@@ -62,14 +57,8 @@ public class DictionaryService {
     }
   }
 
-  //delete this method and replace it by getDefinitionsV2Orig
   public List<String> getDefinitionsV2(String word) {
-    return merriamWebsterDefinitionsV2(word);
-  }
-
-  //keep this method
-  public List<String> getDefinitionsV2Orig(String word) {
-    List<String> definitions = merriamWebsterDefinitions(word);
+    List<String> definitions = merriamWebsterDefinitionsV2(word);
     definitions.addAll(freeDictionaryDefinitions(word));
     return definitions;
   }
@@ -88,7 +77,7 @@ public class DictionaryService {
         .collect(toList());
     result.addAll(orig.stream().filter(String.class::isInstance).map(String.class::cast).filter(
         x -> x.contains("{wi}") && x.contains("{/wi}")).map(x -> x.replaceAll("\\{wi}", EMPTY)).map(x -> x.replaceAll(
-        "\\{/wi}", EMPTY)).map(x -> "// ".concat(x)).collect(toList()));
+        "\\{/wi}", EMPTY)).map("// "::concat).collect(toList()));
     return result;
   }
 
@@ -97,21 +86,6 @@ public class DictionaryService {
       Dictionary dictionaryInstance = new Dictionary(word, new Date(), false);
       dictionaryRepository.save(dictionaryInstance);
     }
-  }
-
-  private List<String> merriamWebsterDefinitions(String word) {
-    String json = restTemplate.getForEntity(String.format(merriamWebsterUrl, word, merriamWebsterKey),
-        String.class).getBody();
-    Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);
-    List<Object> orig = new ArrayList<>(flattenJson.values());
-    flattenJson.keySet().removeIf(x -> !x.contains("shortdef"));
-    if (flattenJson.values().isEmpty()) {
-      orig.add(0, NO_DEFINITION_FOUND + word + ". Perhaps, you meant:");
-      return orig.stream().filter(String.class::isInstance).map(String.class::cast).collect(
-          toList());
-    }
-    return flattenJson.values().stream().filter(String.class::isInstance).map(String.class::cast).collect(
-        toList());
   }
 
   private List<String> freeDictionaryDefinitions(String word) {
@@ -126,12 +100,15 @@ public class DictionaryService {
           flattenJson::get).map(String.class::cast).collect(toList());
       List<String> examples = flattenJson.keySet().stream().filter(contains("example")).map(
           flattenJson::get).map(String.class::cast).collect(toList());
-      List<String> combined = new ArrayList<>();
-      combined.addAll(definitions);
-      if (!synonyms.isEmpty()) combined.add("synonyms:".toUpperCase());
-      if (!examples.isEmpty()) combined.add("examples:".toUpperCase());
-      combined.addAll(examples);
-      combined.addAll(synonyms);
+      List<String> combined = new ArrayList<>(definitions);
+      if (!synonyms.isEmpty()) {
+        combined.add("synonyms:".toUpperCase());
+        combined.addAll(examples);
+      }
+      if (!examples.isEmpty()) {
+        combined.add("examples:".toUpperCase());
+        combined.addAll(synonyms);
+      }
       return combined;
     } catch (Exception e) {
       //return a list that can be modified later if needed
