@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
 public class DictionaryService {
@@ -35,7 +36,13 @@ public class DictionaryService {
     this.freeDictionaryEndpoint = freeDictionaryEndpoint;
   }
 
+  //delete this method and replace it by getDefinitionsOrig
   public List<String> getDefinitions(String word) {
+    return getDefinitionsV2(word);
+  }
+
+  //keep this method
+  public List<String> getDefinitionsOrig(String word) {
     if (dictionaryRepository.findByWord(word).isPresent()) {
       return List.of("Already Looked-up");
     } else {
@@ -55,10 +62,34 @@ public class DictionaryService {
     }
   }
 
+  //delete this method and replace it by getDefinitionsV2Orig
   public List<String> getDefinitionsV2(String word) {
+    return merriamWebsterDefinitionsV2(word);
+  }
+
+  //keep this method
+  public List<String> getDefinitionsV2Orig(String word) {
     List<String> definitions = merriamWebsterDefinitions(word);
     definitions.addAll(freeDictionaryDefinitions(word));
     return definitions;
+  }
+
+  private List<String> merriamWebsterDefinitionsV2(String word) {
+    String json = restTemplate.getForEntity(String.format(merriamWebsterUrl, word, merriamWebsterKey),
+        String.class).getBody();
+    Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);
+    List<Object> orig = new ArrayList<>(flattenJson.values());
+    flattenJson.keySet().removeIf(x -> !x.contains("shortdef"));
+    if (flattenJson.values().isEmpty()) {
+      orig.add(0, NO_DEFINITION_FOUND + word + ". Perhaps, you meant:");
+      return orig.stream().filter(String.class::isInstance).map(String.class::cast).collect(toList());
+    }
+    List<String> result = flattenJson.values().stream().filter(String.class::isInstance).map(String.class::cast).limit(3)
+        .collect(toList());
+    result.addAll(orig.stream().filter(String.class::isInstance).map(String.class::cast).filter(
+        x -> x.contains("{wi}") && x.contains("{/wi}")).map(x -> x.replaceAll("\\{wi}", EMPTY)).map(x -> x.replaceAll(
+        "\\{/wi}", EMPTY)).map(x -> "// ".concat(x)).collect(toList()));
+    return result;
   }
 
   private void save(String word, List<String> definitions) {
@@ -77,10 +108,10 @@ public class DictionaryService {
     if (flattenJson.values().isEmpty()) {
       orig.add(0, NO_DEFINITION_FOUND + word + ". Perhaps, you meant:");
       return orig.stream().filter(String.class::isInstance).map(String.class::cast).collect(
-          Collectors.toList());
+          toList());
     }
     return flattenJson.values().stream().filter(String.class::isInstance).map(String.class::cast).collect(
-        Collectors.toList());
+        toList());
   }
 
   private List<String> freeDictionaryDefinitions(String word) {
@@ -89,21 +120,22 @@ public class DictionaryService {
           String.class).getBody();
       Map<String, Object> flattenJson = JsonFlattener.flattenAsMap(json);
       List<String> definitions = flattenJson.keySet().stream().filter(contains("definition")).map(
-          flattenJson::get).map(String.class::cast).collect(Collectors.toList());
+          flattenJson::get).map(String.class::cast).collect(toList());
       List<String> synonyms = flattenJson.keySet().stream().filter(contains("synonyms")).filter(
           key -> flattenJson.get(key) instanceof String && !(flattenJson.get(key)).toString().isEmpty()).map(
-          flattenJson::get).map(String.class::cast).collect(Collectors.toList());
+          flattenJson::get).map(String.class::cast).collect(toList());
       List<String> examples = flattenJson.keySet().stream().filter(contains("example")).map(
-          flattenJson::get).map(String.class::cast).collect(Collectors.toList());
+          flattenJson::get).map(String.class::cast).collect(toList());
       List<String> combined = new ArrayList<>();
       combined.addAll(definitions);
-      combined.add("synonyms:".toUpperCase());
-      combined.addAll(synonyms);
-      combined.add("examples:".toUpperCase());
+      if (!synonyms.isEmpty()) combined.add("synonyms:".toUpperCase());
+      if (!examples.isEmpty()) combined.add("examples:".toUpperCase());
       combined.addAll(examples);
+      combined.addAll(synonyms);
       return combined;
     } catch (Exception e) {
-      return Arrays.asList(NO_DEFINITION_FOUND + word + " from TheFreeDictionary");
+      //return a list that can be modified later if needed
+      return new ArrayList<>();
     }
   }
 
