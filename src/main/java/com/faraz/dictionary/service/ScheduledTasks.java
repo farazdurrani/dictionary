@@ -4,11 +4,9 @@ import com.faraz.dictionary.entity.Dictionary;
 import com.faraz.dictionary.repository.DictionaryRepository;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
@@ -19,22 +17,36 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.of;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.time.format.TextStyle.FULL;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Locale.US;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.by;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sample;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Service
 public class ScheduledTasks {
 
   private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
+  private static final String CHICAGO = "America/Chicago";
+  private static final ZoneId CHICAGO_TIME = of(CHICAGO);
+
   private final MongoTemplate mongoTemplate;
   private final EmailService emailService;
   private final DictionaryService dictionaryService;
@@ -50,11 +62,11 @@ public class ScheduledTasks {
     this.minimumWords = minimumWords;
   }
 
-  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 3 * * *", zone = CHICAGO)
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
-    LocalDateTime startDate = now().minus(1, DAYS);
-    LocalDateTime endDate = now().minus(2, DAYS);
+    LocalDateTime startDate = now(CHICAGO_TIME).minus(1, DAYS);
+    LocalDateTime endDate = now(CHICAGO_TIME).minus(2, DAYS);
     List<Dictionary> words = wordsFromLast(startDate, endDate);
     if (!words.isEmpty()) {
       List<String> definitions = getDefinitions(words);
@@ -64,10 +76,10 @@ public class ScheduledTasks {
     logger.info("Finished 24 hour task");
   }
 
-  @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 3 * * *", zone = CHICAGO)
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    LocalDateTime startDate = now().minus(1, DAYS);
-    LocalDateTime endDate = now().minus(2, DAYS);
+    LocalDateTime startDate = now(CHICAGO_TIME).minus(1, DAYS);
+    LocalDateTime endDate = now(CHICAGO_TIME).minus(2, DAYS);
     List<Dictionary> words = wordsFromLast(startDate, endDate);
     if (words.size() >= minimumWords) {
       logger.info("Enough words lookup in the past 24 hours. Not sending random definitions.");
@@ -89,10 +101,10 @@ public class ScheduledTasks {
     logger.info("Finished sending random definitions");
   }
 
-  @Scheduled(cron = "0 0 9 * * *", zone = "America/Chicago")
+  @Scheduled(cron = "0 0 9 * * *", zone = CHICAGO)
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
-    List<String> definitions = dictionaryRepository.findAll(Sort.by(Sort.Direction.DESC, "lookupTime")).stream().map(
+    List<String> definitions = dictionaryRepository.findAll(by(DESC, "lookupTime")).stream().map(
         Dictionary::getWord).distinct().map(this::anchor).collect(toList());
     definitions.add(0, "Count: " + definitions.size());
     String subject = "Words Backup";
@@ -101,7 +113,7 @@ public class ScheduledTasks {
   }
 
   private List<Dictionary> setReminded() {
-    Query query = new Query().addCriteria(Criteria.where("lookupTime").lt(now().minus(7, DAYS)));
+    Query query = new Query().addCriteria(where("lookupTime").lt(now(CHICAGO_TIME).minus(7, DAYS)));
     List<Dictionary> allWords = mongoTemplate.find(query, Dictionary.class).stream().map(w -> setReminded(w, false)).collect(
         toList());
     dictionaryRepository.saveAll(allWords);
@@ -120,7 +132,7 @@ public class ScheduledTasks {
   }
 
   private void sendEmail(List<String> definitions, String subject) throws MailjetSocketTimeoutException, MailjetException {
-    String body = String.join("<br>", definitions);
+    String body = join("<br>", definitions);
     body = "<div style=\"font-size:20px\">" + body + "</div>";
     int status = emailService.sendEmail(subject, body);
     logger.info("Sent definitions with status " + status);
@@ -140,15 +152,14 @@ public class ScheduledTasks {
   }
 
   private String anchor(String word) {
-    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + StringUtils.capitalize(
-        word) + "</a>";
+    return "<a href='https://www.google.com/search?q=define: " + word + "' target='_blank'>" + capitalize(word) + "</a>";
   }
 
   private Aggregation createAggregationQuery(int wordLimit) {
-    MatchOperation matchStage = Aggregation.match(new Criteria().andOperator(Criteria.where("reminded").is(false),
-        Criteria.where("lookupTime").lt(now().minus(8, DAYS))));
-    SampleOperation sampleOperation = Aggregation.sample(wordLimit);
-    return Aggregation.newAggregation(matchStage, sampleOperation);
+    MatchOperation matchStage = match(new Criteria().andOperator(where("reminded").is(false),
+        where("lookupTime").lt(now(CHICAGO_TIME).minus(8, DAYS))));
+    SampleOperation sampleOperation = sample(wordLimit);
+    return newAggregation(matchStage, sampleOperation);
   }
 
   private static String formSubjectLine(LocalDateTime startDate, LocalDateTime endDate) {
@@ -158,7 +169,7 @@ public class ScheduledTasks {
     String endTime = endDate.format(ofPattern("ha"));
     String startMonthName = startDate.getMonth().getDisplayName(FULL, US);
     String endMonthName = endDate.getMonth().getDisplayName(FULL, US);
-    return String.format("Words looked-up between %s of %s-%s and %s of %s-%s", endTime, endMonthName, endDay, startTime,
+    return format("Words looked-up between %s of %s-%s and %s of %s-%s", endTime, endMonthName, endDay, startTime,
         startMonthName, startDay);
   }
 
@@ -182,7 +193,7 @@ public class ScheduledTasks {
    * Db call
    */
   private List<Dictionary> wordsFromLast(LocalDateTime startDate, LocalDateTime endDate) {
-    Query query = new Query().addCriteria(Criteria.where("lookupTime").gte(endDate).lt(startDate));
+    Query query = new Query().addCriteria(where("lookupTime").gte(endDate).lt(startDate));
     return new ArrayList<>(mongoTemplate.find(query, Dictionary.class));
   }
 }
