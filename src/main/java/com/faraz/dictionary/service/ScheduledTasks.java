@@ -18,14 +18,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.time.Instant.now;
+import static java.time.LocalDateTime.now;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.time.format.TextStyle.FULL;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Locale.US;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -39,27 +42,33 @@ public class ScheduledTasks {
   private final int minimumWords;
 
   public ScheduledTasks(MongoTemplate mongoTemplate, EmailService emailService, DictionaryService dictionaryService,
-                        DictionaryRepository dictionaryRepository, @Value("${minimum:25}") int mininumWords) {
+                        DictionaryRepository dictionaryRepository, @Value("${minimum:25}") int minimumWords) {
     this.mongoTemplate = mongoTemplate;
     this.emailService = emailService;
     this.dictionaryService = dictionaryService;
     this.dictionaryRepository = dictionaryRepository;
-    this.minimumWords = mininumWords;
+    this.minimumWords = minimumWords;
   }
 
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
-    List<Dictionary> words = wordsFromLast();
-    List<String> definitions = getDefinitions(words);
-    String subject = "Words lookup in the past 24 hours";
-    sendEmail(definitions, subject);
+    LocalDateTime startDate = now().minus(1, DAYS);
+    LocalDateTime endDate = now().minus(2, DAYS);
+    List<Dictionary> words = wordsFromLast(startDate, endDate);
+    if (!words.isEmpty()) {
+      List<String> definitions = getDefinitions(words);
+      String subject = formSubjectLine(startDate, endDate);
+      sendEmail(definitions, subject);
+    }
     logger.info("Finished 24 hour task");
   }
 
   @Scheduled(cron = "0 0 3 * * *", zone = "America/Chicago")
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
-    List<Dictionary> words = wordsFromLast();
+    LocalDateTime startDate = now().minus(1, DAYS);
+    LocalDateTime endDate = now().minus(2, DAYS);
+    List<Dictionary> words = wordsFromLast(startDate, endDate);
     if (words.size() >= minimumWords) {
       logger.info("Enough words lookup in the past 24 hours. Not sending random definitions.");
       return;
@@ -92,7 +101,7 @@ public class ScheduledTasks {
   }
 
   private List<Dictionary> setReminded() {
-    Query query = new Query().addCriteria(Criteria.where("lookupTime").lt(Date.from(now().minus(7, DAYS))));
+    Query query = new Query().addCriteria(Criteria.where("lookupTime").lt(now().minus(7, DAYS)));
     List<Dictionary> allWords = mongoTemplate.find(query, Dictionary.class).stream().map(w -> setReminded(w, false)).collect(
         toList());
     dictionaryRepository.saveAll(allWords);
@@ -137,17 +146,42 @@ public class ScheduledTasks {
 
   private Aggregation createAggregationQuery(int wordLimit) {
     MatchOperation matchStage = Aggregation.match(new Criteria().andOperator(Criteria.where("reminded").is(false),
-        Criteria.where("lookupTime").lt(Date.from(now().minus(8, DAYS)))));
+        Criteria.where("lookupTime").lt(now().minus(8, DAYS))));
     SampleOperation sampleOperation = Aggregation.sample(wordLimit);
     return Aggregation.newAggregation(matchStage, sampleOperation);
+  }
+
+  private static String formSubjectLine(LocalDateTime startDate, LocalDateTime endDate) {
+    String startDay = startDate.getDayOfMonth() + suffix(startDate.getDayOfMonth());
+    String endDay = endDate.getDayOfMonth() + suffix(endDate.getDayOfMonth());
+    String startTime = startDate.format(ofPattern("ha"));
+    String endTime = endDate.format(ofPattern("ha"));
+    String startMonthName = startDate.getMonth().getDisplayName(FULL, US);
+    String endMonthName = endDate.getMonth().getDisplayName(FULL, US);
+    return String.format("Words looked-up between %s of %s-%s and %s of %s-%s", endTime, endMonthName, endDay, startTime,
+        startMonthName, startDay);
+  }
+
+  private static String suffix(final int n) {
+    if (n >= 11 && n <= 13) {
+      return "th";
+    }
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
   }
 
   /**
    * Db call
    */
-  private List<Dictionary> wordsFromLast() {
-    Date startDate = Date.from(now().minus(1, DAYS));
-    Date endDate = Date.from(now().minus(2, DAYS));
+  private List<Dictionary> wordsFromLast(LocalDateTime startDate, LocalDateTime endDate) {
     Query query = new Query().addCriteria(Criteria.where("lookupTime").gte(endDate).lt(startDate));
     return new ArrayList<>(mongoTemplate.find(query, Dictionary.class));
   }
