@@ -62,8 +62,8 @@ public class ScheduledTasks {
     this.minimumWords = minimumWords;
   }
 
-  @Scheduled(cron = "0 0 3 * * *", zone = CHICAGO)
-  public void everyDayTask() throws MailjetSocketTimeoutException, MailjetException {
+  @Scheduled(cron = "${data.looked.recently}", zone = CHICAGO)
+  public void sendRecent() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Started 24 hour task");
     LocalDateTime startDate = now(CHICAGO_TIME).minus(1, DAYS);
     LocalDateTime endDate = now(CHICAGO_TIME).minus(2, DAYS);
@@ -76,7 +76,7 @@ public class ScheduledTasks {
     logger.info("Finished 24 hour task");
   }
 
-  @Scheduled(cron = "0 0 3 * * *", zone = CHICAGO)
+  @Scheduled(cron = "${data.looked.previously}", zone = CHICAGO)
   public void sendRandomDefinitions() throws MailjetSocketTimeoutException, MailjetException {
     LocalDateTime startDate = now(CHICAGO_TIME).minus(1, DAYS);
     LocalDateTime endDate = now(CHICAGO_TIME).minus(2, DAYS);
@@ -101,7 +101,7 @@ public class ScheduledTasks {
     logger.info("Finished sending random definitions");
   }
 
-  @Scheduled(cron = "0 0 9 * * *", zone = CHICAGO)
+  @Scheduled(cron = "${data.backup}", zone = CHICAGO)
   public void backup() throws MailjetSocketTimeoutException, MailjetException {
     logger.info("Backup started");
     List<String> definitions = dictionaryRepository.findAll(by(DESC, "lookupTime")).stream().map(
